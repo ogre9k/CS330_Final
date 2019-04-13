@@ -5,6 +5,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine/StaticMesh.h"
 
 ACS330_FinalProjectile::ACS330_FinalProjectile() 
@@ -40,6 +41,6 @@ void ACS330_FinalProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAc
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
 	}
-
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation());
 	Destroy();
 }

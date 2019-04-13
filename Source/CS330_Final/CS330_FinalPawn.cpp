@@ -22,6 +22,13 @@ const FName ACS330_FinalPawn::FireBinding("Fire");
 
 ACS330_FinalPawn::ACS330_FinalPawn()
 {	
+	//set bullet
+	static ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> BulletBPClass(TEXT("/Game/MyCS330_FinalProjectile"));
+	if (BulletBPClass.Class != NULL)
+	{
+		Bullet = BulletBPClass.Class;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
 	// Create the mesh component
 	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
@@ -158,7 +165,7 @@ void ACS330_FinalPawn::FireShot()
 			if (World != NULL)
 			{
 				// spawn the projectile
-				World->SpawnActor<ACS330_FinalProjectile>(SpawnLocation, FireRotation);
+				World->SpawnActor<ACS330_FinalProjectile>(Bullet, SpawnLocation, FireRotation);
 			}
 
 			bCanFire = false;
