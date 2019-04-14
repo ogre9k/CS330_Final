@@ -69,6 +69,8 @@ Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
+enc_temp_folder/*
+Content/ParagonGideon/*
 # =========================
 # Operating System Files
 # =========================

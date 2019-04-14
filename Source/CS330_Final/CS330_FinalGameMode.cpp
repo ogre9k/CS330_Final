@@ -9,13 +9,13 @@ ACS330_FinalGameMode::ACS330_FinalGameMode()
 {
 	PlayerControllerClass = ATopDownPlayerController::StaticClass();
 	// set default pawn class to our character class
-	DefaultPawnClass = ACS330_FinalPawn::StaticClass();
+	//DefaultPawnClass = ACS330_FinalPawn::StaticClass();
 
-	/*static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/MyCS330_FinalPawn"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_PlayerCharacter"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
-	*/
+	
 }
 
