@@ -23,6 +23,7 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
+
 	/** Offset from the ships location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		FVector GunOffset;
@@ -46,7 +47,7 @@ public:
 
 	/* Fire a shot in the specified direction */
 	void FireShot();
-
+	bool AnimPlaying;
 	void UpdateMouseLook();
 
 	/* Handler for the fire timer expiry */
@@ -61,6 +62,19 @@ public:
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
 	static const FName FireBinding;
+
+	void OnStartFire();
+	void OnStopFire();
+	FTimerHandle FireTimer;
+
+	/** Navigate player using WASD */
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* AttackAnim1;
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* AttackAnim2;
 
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }

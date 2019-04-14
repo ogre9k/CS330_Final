@@ -29,6 +29,7 @@ APlayerCharacter::APlayerCharacter()
 		Bullet = BulletBPClass.Class;
 	}
 
+	AnimPlaying = false;
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
 	FireSound = FireAudio.Object;
@@ -50,7 +51,7 @@ APlayerCharacter::APlayerCharacter()
 	MoveSpeed = 1000.0f;
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
-	FireRate = 0.1f;
+	FireRate = 0.16f;
 	bCanFire = true;
 
 	APlayerController* PC = Cast<APlayerController>(GetController());
@@ -69,49 +70,42 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	check(PlayerInputComponent);
 
 	// set up gameplay key bindings
-	PlayerInputComponent->BindAxis(MoveForwardBinding);
-	PlayerInputComponent->BindAxis(MoveRightBinding);
+	PlayerInputComponent->BindAxis(MoveForwardBinding, this, &APlayerCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(MoveRightBinding, this, &APlayerCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(FireForwardBinding);
 	PlayerInputComponent->BindAxis(FireRightBinding);
-	PlayerInputComponent->BindAxis(FireBinding);
+	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &APlayerCharacter::OnStartFire);
+	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &APlayerCharacter::OnStopFire);
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
 {
-	// Find movement direction
-	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
-	const float RightValue = GetInputAxisValue(MoveRightBinding);
-	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
-	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
-
-	// Calculate  movement
-	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
-
-	// If non-zero size, move this actor
-	if (Movement.SizeSquared() > 0.0f)
-	{
-		const FRotator NewRotation = Movement.Rotation();
-		FHitResult Hit(1.f);
-		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
-
-		if (Hit.IsValidBlockingHit())
-		{
-			const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
-			const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
-			RootComponent->MoveComponent(Deflection, NewRotation, true);
-		}
-	}
-
-	// Create fire direction vector
-	const float FireForwardValue = GetInputAxisValue(FireForwardBinding);
-	const float FireRightValue = GetInputAxisValue(FireRightBinding);
-	const FVector FireDirection = GetActorForwardVector();
-
-	// Try and fire a shot
 	UpdateMouseLook();
-	bool Shoot = GetInputAxisValue(FireBinding);
-	if (Shoot)
-		FireShot();
+}
+
+void APlayerCharacter::OnStartFire()
+{
+	GetWorldTimerManager().SetTimer(FireTimer, this, &APlayerCharacter::FireShot, FireRate, true, 0.0f);
+}
+
+void APlayerCharacter::OnStopFire()
+{
+	GetWorldTimerManager().ClearTimer(FireTimer);
+}
+void APlayerCharacter::MoveForward(float Value)
+{
+	if (Value != 0.0f)
+	{
+		AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+	}
+}
+
+void APlayerCharacter::MoveRight(float Value)
+{
+	if (Value != 0.0f)
+	{
+		AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
+	}
 }
 
 void APlayerCharacter::UpdateMouseLook()
@@ -143,16 +137,42 @@ void APlayerCharacter::UpdateMouseLook()
 }
 void APlayerCharacter::FireShot()
 {
+	static FName RHandSocket = FName(TEXT("hand_r"));
 	FVector FireDirection = GetActorForwardVector();
-	// If it's ok to fire again
-	if (bCanFire == true)
+
+	/* This code can be used to spawn at hand
+	TArray<USkeletalMeshComponent*> Components;
+	GetComponents<USkeletalMeshComponent>(Components);
+	for (int32 i = 0; i < Components.Num(); i++)
 	{
+		USkeletalMeshComponent* SkeletalMeshComponent = Components[i];
+	}
+	if (Components[0])
+	{
+		SpawnLocation = Components[0]->GetSocketLocation(RHandSocket);
+	}
+	*/
+
+	// If it's ok to fire again
+	//if (bCanFire == true)
+	//{
+		if (AnimPlaying)
+		{
+			AnimPlaying = false;
+			PlayAnimMontage(AttackAnim2, 3.0f);
+		}
+		else
+		{
+			AnimPlaying = true;
+			PlayAnimMontage(AttackAnim1, 3.0f);
+		}
+
 		// If we are pressing fire stick in a direction
 		if (FireDirection.SizeSquared() > 0.0f)
 		{
 			const FRotator FireRotation = FireDirection.Rotation();
 			// Spawn projectile at an offset from this pawn
-			const FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
+			FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
 
 			UWorld* const World = GetWorld();
 			if (World != NULL)
@@ -172,7 +192,7 @@ void APlayerCharacter::FireShot()
 
 			bCanFire = false;
 		}
-	}
+	//}
 }
 
 void APlayerCharacter::ShotTimerExpired()
