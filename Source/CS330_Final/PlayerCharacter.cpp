@@ -29,7 +29,11 @@ APlayerCharacter::APlayerCharacter()
 		Bullet = BulletBPClass.Class;
 	}
 
-	AnimPlaying = false;
+	ComboAnimFlag = false;
+	Shooting = false;
+	UpdateFacing = true;
+	LastRotation = GetActorRotation();
+
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
 	FireSound = FireAudio.Object;
@@ -52,7 +56,6 @@ APlayerCharacter::APlayerCharacter()
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireRate = 0.16f;
-	bCanFire = true;
 
 	APlayerController* PC = Cast<APlayerController>(GetController());
 
@@ -80,22 +83,60 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 void APlayerCharacter::Tick(float DeltaSeconds)
 {
-	UpdateMouseLook();
+	
+	//This handles updating facing direction while moving and not firing
+	if (!Shooting && UpdateFacing)
+	{
+		// Find movement direction
+		const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
+		const float RightValue = GetInputAxisValue(MoveRightBinding);
+
+		// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
+		const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
+
+		// Calculate  movement
+		const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
+
+		// If non-zero size, rotate
+		if (Movement.SizeSquared() > 0.0f)
+		{
+			const FRotator NewRotation = Movement.Rotation();
+			RootComponent->SetRelativeRotation(NewRotation);
+		}
+		//This will keep getting reset to true as long as we're still moving
+		UpdateFacing = false;
+	}
+	//Face towards the mouse if we're shooting
+	else if(Shooting)
+	{
+		UpdateFacing = false;
+		UpdateMouseLook();
+	}
+	//If we're standing still and not shooting, face the last direction we faced
+	else 
+	{
+		RootComponent->SetRelativeRotation(LastRotation);
+	}
+	
+	LastRotation = GetActorRotation();
 }
 
 void APlayerCharacter::OnStartFire()
 {
+	Shooting = true;
 	GetWorldTimerManager().SetTimer(FireTimer, this, &APlayerCharacter::FireShot, FireRate, true, 0.0f);
 }
 
 void APlayerCharacter::OnStopFire()
 {
+	Shooting = false;
 	GetWorldTimerManager().ClearTimer(FireTimer);
 }
 void APlayerCharacter::MoveForward(float Value)
 {
 	if (Value != 0.0f)
 	{
+		UpdateFacing = true;
 		AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
 	}
 }
@@ -104,6 +145,7 @@ void APlayerCharacter::MoveRight(float Value)
 {
 	if (Value != 0.0f)
 	{
+		UpdateFacing = true;
 		AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
 	}
 }
@@ -128,8 +170,8 @@ void APlayerCharacter::UpdateMouseLook()
 			if (hit)
 			{
 				FVector targetLocation = hitResult.Location;
-				FRotator PlayerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), targetLocation);
-				this->SetActorRotation(FRotator(0.0f, PlayerRot.Yaw, 0.f));
+				FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), targetLocation);
+				SetActorRotation(FRotator(0.0f, NewRot.Yaw, 0.f));
 			}
 
 		}
@@ -137,10 +179,11 @@ void APlayerCharacter::UpdateMouseLook()
 }
 void APlayerCharacter::FireShot()
 {
-	static FName RHandSocket = FName(TEXT("hand_r"));
 	FVector FireDirection = GetActorForwardVector();
 
 	/* This code can be used to spawn at hand
+	   Not planning on using it, but leaving as reference
+	   static FName RHandSocket = FName(TEXT("hand_r"));
 	TArray<USkeletalMeshComponent*> Components;
 	GetComponents<USkeletalMeshComponent>(Components);
 	for (int32 i = 0; i < Components.Num(); i++)
@@ -153,50 +196,35 @@ void APlayerCharacter::FireShot()
 	}
 	*/
 
-	// If it's ok to fire again
-	//if (bCanFire == true)
-	//{
-		if (AnimPlaying)
-		{
-			AnimPlaying = false;
-			PlayAnimMontage(AttackAnim2, 3.0f);
-		}
-		else
-		{
-			AnimPlaying = true;
-			PlayAnimMontage(AttackAnim1, 3.0f);
-		}
+	//This handles swapping between left and right hand animation every time we fire
+	if (ComboAnimFlag)
+	{
+		ComboAnimFlag = false;
+		PlayAnimMontage(AttackAnim2, 3.0f);
+	}
+	else
+	{
+		ComboAnimFlag = true;
+		PlayAnimMontage(AttackAnim1, 3.0f);
+	}
 
-		// If we are pressing fire stick in a direction
-		if (FireDirection.SizeSquared() > 0.0f)
-		{
-			const FRotator FireRotation = FireDirection.Rotation();
-			// Spawn projectile at an offset from this pawn
-			FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
+	const FRotator FireRotation = FireDirection.Rotation();
 
-			UWorld* const World = GetWorld();
-			if (World != NULL)
-			{
-				// spawn the projectile
-				World->SpawnActor<ACS330_FinalProjectile>(Bullet, SpawnLocation, FireRotation);
-			}
+	// Spawn projectile at an offset from this pawn
+	FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
 
-			bCanFire = false;
-			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &APlayerCharacter::ShotTimerExpired, FireRate);
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+	{
+		// spawn the projectile
+		World->SpawnActor<ACS330_FinalProjectile>(Bullet, SpawnLocation, FireRotation);
+	}
 
-			// try and play the sound if specified
-			if (FireSound != nullptr)
-			{
-				UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-			}
-
-			bCanFire = false;
-		}
-	//}
+	// try and play the sound if specified
+	if (FireSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+	}
 }
 
-void APlayerCharacter::ShotTimerExpired()
-{
-	bCanFire = true;
-}
 
