@@ -6,10 +6,13 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Particles/ParticleSystem.h"
+#include "Runtime/Engine/Classes/Particles/ParticleEmitter.h"
 #include "Engine/StaticMesh.h"
 
 ACS330_FinalProjectile::ACS330_FinalProjectile() 
 {
+	/*
 	// Static reference to the mesh to use for the projectile
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> ProjectileMeshAsset(TEXT("/Game/TwinStick/Meshes/TwinStickProjectile.TwinStickProjectile"));
 
@@ -20,10 +23,17 @@ ACS330_FinalProjectile::ACS330_FinalProjectile()
 	ProjectileMesh->BodyInstance.SetCollisionProfileName("Projectile");
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &ACS330_FinalProjectile::OnHit);		// set up a notification for when this component hits something
 	RootComponent = ProjectileMesh;
+	*/
+
+	ProjectileSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ProjectileSphere"));
+	ProjectileSphere->SetupAttachment(RootComponent);
+	ProjectileSphere->BodyInstance.SetCollisionProfileName("Projectile");
+	ProjectileSphere->OnComponentHit.AddDynamic(this, &ACS330_FinalProjectile::OnHit);
+	RootComponent = ProjectileSphere;
 
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement0"));
-	ProjectileMovement->UpdatedComponent = ProjectileMesh;
+	ProjectileMovement->UpdatedComponent = ProjectileSphere;
 	ProjectileMovement->InitialSpeed = 3000.f;
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
@@ -36,10 +46,11 @@ ACS330_FinalProjectile::ACS330_FinalProjectile()
 
 void ACS330_FinalProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if ((OtherActor != NULL) && (OtherActor != this))
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherActor != UGameplayStatics::GetPlayerPawn(GetWorld(), 0)))
 	{
 		if(OtherComp != NULL && OtherComp->IsSimulatingPhysics())
 			OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
+		
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation());
 		Destroy();
 	}

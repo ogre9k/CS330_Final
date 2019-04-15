@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Runtime/Engine/Classes/Components/SphereComponent.h"
 #include "CS330_FinalProjectile.generated.h"
 
 class UProjectileMovementComponent;
@@ -15,12 +16,16 @@ class ACS330_FinalProjectile : public AActor
 	GENERATED_BODY()
 
 	/** Sphere collision component */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	//UStaticMeshComponent* ProjectileMesh;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* ProjectileMesh;
+	USphereComponent* ProjectileSphere;
 
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
+
 
 public:
 	ACS330_FinalProjectile();
@@ -30,11 +35,15 @@ public:
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	/** Returns ProjectileMesh subobject **/
-	FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
+	//FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
+	/** Returns ProjectileSphere subobject **/
+	FORCEINLINE USphereComponent* GetProjectileSphere() const { return ProjectileSphere; }
+	
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	UParticleSystem* HitEffect;
+
 };
 
