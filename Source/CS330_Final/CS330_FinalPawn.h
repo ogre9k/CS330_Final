@@ -55,6 +55,9 @@ public:
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon Stats")
+	TSubclassOf<class ACS330_FinalProjectile> Bullet;
+
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;
