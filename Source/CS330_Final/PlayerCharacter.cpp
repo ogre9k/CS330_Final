@@ -22,11 +22,22 @@ const FName APlayerCharacter::FireBinding("Fire");
 
 APlayerCharacter::APlayerCharacter()
 {
-	//set bullet
-	static ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> BulletBPClass(TEXT("/Game/Blueprints/Bullets/BP_TestProjectile"));
-	if (BulletBPClass.Class != NULL)
+	//Fire is default element
+	ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> FireBulletBPClass(TEXT("/Game/Blueprints/Bullets/BP_FireShot"));
+	if (FireBulletBPClass.Class != NULL)
 	{
-		Bullet = BulletBPClass.Class;
+		FireBullet = FireBulletBPClass.Class;
+		Bullet = FireBullet;
+	}
+	ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> WaterBulletBPClass(TEXT("/Game/Blueprints/Bullets/BP_WaterShot"));
+	if (WaterBulletBPClass.Class != NULL)
+	{
+		WaterBullet = WaterBulletBPClass.Class;
+	}
+	ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> AirBulletBPClass(TEXT("/Game/Blueprints/Bullets/BP_AirShot"));
+	if (AirBulletBPClass.Class != NULL)
+	{
+		AirBullet = AirBulletBPClass.Class;
 	}
 
 	ComboAnimFlag = false;
@@ -79,6 +90,31 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis(FireRightBinding);
 	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &APlayerCharacter::OnStartFire);
 	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &APlayerCharacter::OnStopFire);
+	PlayerInputComponent->BindAction(FName("OneKey"), IE_Released, this, &APlayerCharacter::SwapToFire);
+	PlayerInputComponent->BindAction(FName("TwoKey"), IE_Released, this, &APlayerCharacter::SwapToWater);
+	PlayerInputComponent->BindAction(FName("ThreeKey"), IE_Released, this, &APlayerCharacter::SwapToAir);
+}
+
+void APlayerCharacter::SwapToFire()
+{
+	if (FireBullet != NULL)
+	{
+		Bullet = FireBullet;
+	}
+}
+void APlayerCharacter::SwapToWater()
+{
+	if (WaterBullet != NULL)
+	{
+		Bullet = WaterBullet;
+	}
+}
+void APlayerCharacter::SwapToAir()
+{
+	if (AirBullet != NULL)
+	{
+		Bullet = AirBullet;
+	}
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)

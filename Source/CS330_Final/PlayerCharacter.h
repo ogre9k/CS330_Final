@@ -57,6 +57,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> Bullet;
+	TSubclassOf<class ACS330_FinalProjectile> FireBullet;
+	TSubclassOf<class ACS330_FinalProjectile> WaterBullet;
+	TSubclassOf<class ACS330_FinalProjectile> AirBullet;
 
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
@@ -64,6 +67,10 @@ public:
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
 	static const FName FireBinding;
+
+	void SwapToFire();
+	void SwapToWater();
+	void SwapToAir();
 
 	void OnStartFire();
 	void OnStopFire();
