@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/Particles/ParticleSystem.h"
 #include "Runtime/Engine/Classes/Particles/ParticleEmitter.h"
+#include "WizardCharacter.h"
 #include "Engine/StaticMesh.h"
 
 ACS330_FinalProjectile::ACS330_FinalProjectile() 
@@ -41,6 +42,10 @@ void ACS330_FinalProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAc
 		if(OtherComp != NULL && OtherComp->IsSimulatingPhysics())
 			OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
 		
+		OtherActor = Cast<AWizardCharacter>(OtherActor);
+		if (OtherActor)
+			OtherActor->TakeDamage(10, FDamageEvent(), GetInstigatorController(), this);
+
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation());
 		Destroy();
 	}
