@@ -12,18 +12,8 @@
 
 ACS330_FinalProjectile::ACS330_FinalProjectile() 
 {
-	/*
 	// Static reference to the mesh to use for the projectile
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> ProjectileMeshAsset(TEXT("/Game/TwinStick/Meshes/TwinStickProjectile.TwinStickProjectile"));
-
-	// Create mesh component for the projectile sphere
-	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh0"));
-	ProjectileMesh->SetStaticMesh(ProjectileMeshAsset.Object);
-	ProjectileMesh->SetupAttachment(RootComponent);
-	ProjectileMesh->BodyInstance.SetCollisionProfileName("Projectile");
-	ProjectileMesh->OnComponentHit.AddDynamic(this, &ACS330_FinalProjectile::OnHit);		// set up a notification for when this component hits something
-	RootComponent = ProjectileMesh;
-	*/
 
 	ProjectileSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ProjectileSphere"));
 	ProjectileSphere->SetupAttachment(RootComponent);
