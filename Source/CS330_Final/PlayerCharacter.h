@@ -23,7 +23,7 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
-
+	FString Color;
 	/** Offset from the ships location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		FVector GunOffset;
@@ -43,6 +43,8 @@ public:
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
+		AController* EventInstigator, AActor* DamageCauser);
 	// End Actor Interface
 
 	/* Fire a shot in the specified direction */
@@ -57,6 +59,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> Bullet;
+	TSubclassOf<class ACS330_FinalProjectile> FireBullet;
+	TSubclassOf<class ACS330_FinalProjectile> WaterBullet;
+	TSubclassOf<class ACS330_FinalProjectile> AirBullet;
 
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
@@ -64,6 +69,11 @@ public:
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
 	static const FName FireBinding;
+
+	void SwapToFire();
+	void SwapToWater();
+	void SwapToAir();
+	void StopTime();
 
 	void OnStartFire();
 	void OnStopFire();

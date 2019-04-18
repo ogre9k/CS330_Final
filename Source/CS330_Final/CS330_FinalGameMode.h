@@ -13,6 +13,8 @@ class ACS330_FinalGameMode : public AGameModeBase
 
 public:
 	ACS330_FinalGameMode();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Time")
+	bool TimeStopped;
 };
 
 

@@ -12,6 +12,7 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "CS330_FinalGameMode.h"
 #include "Sound/SoundBase.h"
 
 const FName APlayerCharacter::MoveForwardBinding("MoveForward");
@@ -22,13 +23,25 @@ const FName APlayerCharacter::FireBinding("Fire");
 
 APlayerCharacter::APlayerCharacter()
 {
-	//set bullet
-	static ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> BulletBPClass(TEXT("/Game/Blueprints/Bullets/BP_TestProjectile"));
-	if (BulletBPClass.Class != NULL)
+	//Fire is default element
+	ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> FireBulletBPClass(TEXT("/Game/Blueprints/Bullets/PlayerBullets/BP_PFireShot"));
+	if (FireBulletBPClass.Class != NULL)
 	{
-		Bullet = BulletBPClass.Class;
+		FireBullet = FireBulletBPClass.Class;
+		Bullet = FireBullet;
+	}
+	ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> WaterBulletBPClass(TEXT("/Game/Blueprints/Bullets/PlayerBullets/BP_PWaterShot"));
+	if (WaterBulletBPClass.Class != NULL)
+	{
+		WaterBullet = WaterBulletBPClass.Class;
+	}
+	ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> AirBulletBPClass(TEXT("/Game/Blueprints/Bullets/PlayerBullets/BP_PAirShot"));
+	if (AirBulletBPClass.Class != NULL)
+	{
+		AirBullet = AirBulletBPClass.Class;
 	}
 
+	Color = "Red";
 	ComboAnimFlag = false;
 	Shooting = false;
 	UpdateFacing = true;
@@ -79,6 +92,46 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis(FireRightBinding);
 	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &APlayerCharacter::OnStartFire);
 	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &APlayerCharacter::OnStopFire);
+	PlayerInputComponent->BindAction(FName("OneKey"), IE_Released, this, &APlayerCharacter::SwapToFire);
+	PlayerInputComponent->BindAction(FName("TwoKey"), IE_Released, this, &APlayerCharacter::SwapToWater);
+	PlayerInputComponent->BindAction(FName("ThreeKey"), IE_Released, this, &APlayerCharacter::SwapToAir);
+	//PlayerInputComponent->BindAction(FName("FourKey"), IE_Released, this, &APlayerCharacter::StopTime);
+}
+
+void APlayerCharacter::StopTime()
+{
+	ACS330_FinalGameMode* GameMode = Cast<ACS330_FinalGameMode>(GetWorld()->GetAuthGameMode());
+	if (GameMode)
+	{
+		if (GameMode->TimeStopped)
+			GameMode ->TimeStopped = false;
+		else
+			GameMode->TimeStopped = true;
+	}
+}
+void APlayerCharacter::SwapToFire()
+{
+	if (FireBullet != NULL)
+	{
+		Bullet = FireBullet;
+		Color = "Red";
+	}
+}
+void APlayerCharacter::SwapToWater()
+{
+	if (WaterBullet != NULL)
+	{
+		Bullet = WaterBullet;
+		Color = "Blue";
+	}
+}
+void APlayerCharacter::SwapToAir()
+{
+	if (AirBullet != NULL)
+	{
+		Bullet = AirBullet;
+		Color = "Green";
+	}
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
@@ -228,3 +281,18 @@ void APlayerCharacter::FireShot()
 }
 
 
+
+float APlayerCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
+	AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	if (ActualDamage > 0.0f)
+	{
+
+
+		;
+	}
+
+	return ActualDamage;
+}
