@@ -29,11 +29,12 @@ class ACS330_FinalProjectile : public AActor
 
 public:
 	ACS330_FinalProjectile();
-
 	/** Function to handle the projectile hitting something */
 	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	UFUNCTION()
+	virtual	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	/** Returns ProjectileMesh subobject **/
 	//FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
 	/** Returns ProjectileSphere subobject **/
@@ -42,8 +43,17 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, Category = "Hit Results")
 	UParticleSystem* HitEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Hit Results")
+	float HitForce;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Hit Results")
+    float Damage;
+
+	UPROPERTY(EditDefaultsOnly, category = "Hit Results")
+	FString Color;
 
 };
 

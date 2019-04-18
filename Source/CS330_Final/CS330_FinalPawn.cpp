@@ -23,7 +23,7 @@ const FName ACS330_FinalPawn::FireBinding("Fire");
 ACS330_FinalPawn::ACS330_FinalPawn()
 {	
 	//set bullet
-	static ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> BulletBPClass(TEXT("/Game/Blueprints/Bullets/BP_TestProjectile"));
+	static ConstructorHelpers::FClassFinder<ACS330_FinalProjectile> BulletBPClass(TEXT("/Game/Blueprints/Bullets/PlayerBullets/BP_PFireShot"));
 	if (BulletBPClass.Class != NULL)
 	{
 		Bullet = BulletBPClass.Class;

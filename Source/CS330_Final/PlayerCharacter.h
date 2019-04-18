@@ -23,7 +23,7 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
-
+	FString Color;
 	/** Offset from the ships location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		FVector GunOffset;
@@ -43,6 +43,8 @@ public:
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
+		AController* EventInstigator, AActor* DamageCauser);
 	// End Actor Interface
 
 	/* Fire a shot in the specified direction */
