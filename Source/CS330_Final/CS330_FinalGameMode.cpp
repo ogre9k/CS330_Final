@@ -16,6 +16,8 @@ ACS330_FinalGameMode::ACS330_FinalGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	bool TimeStopped = false;
 	
 }
 

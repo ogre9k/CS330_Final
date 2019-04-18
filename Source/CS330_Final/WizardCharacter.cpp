@@ -6,6 +6,7 @@
 #include "Runtime/Engine/Classes/Particles/ParticleSystem.h"
 #include "PlayerCharacter.h"
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
+#include "CS330_FinalGameMode.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -29,23 +30,31 @@ void AWizardCharacter::BeginPlay()
 
 void AWizardCharacter::FireShot()
 {
-	FVector FireDirection = GetActorForwardVector();
-
-
-	const FRotator FireRotation = FireDirection.Rotation();
-
-	// Spawn projectile at an offset from this pawn
-	FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = this;
-	SpawnParams.Instigator = Instigator;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	UWorld* const World = GetWorld();
-	if (World != NULL)
+	ACS330_FinalGameMode* GameMode = Cast<ACS330_FinalGameMode>(GetWorld()->GetAuthGameMode());
+	if (GameMode)
 	{
-		// spawn the projectile
-		World->SpawnActor<ACS330_FinalProjectile>(Bullet, SpawnLocation, FireRotation, SpawnParams);
+		if (!GameMode->TimeStopped)
+		{
+
+			FVector FireDirection = GetActorForwardVector();
+
+
+			const FRotator FireRotation = FireDirection.Rotation();
+
+			// Spawn projectile at an offset from this pawn
+			FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = Instigator;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+			UWorld* const World = GetWorld();
+			if (World != NULL)
+			{
+				// spawn the projectile
+				World->SpawnActor<ACS330_FinalProjectile>(Bullet, SpawnLocation, FireRotation, SpawnParams);
+			}
+		}
 	}
 }
 

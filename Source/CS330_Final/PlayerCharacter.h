@@ -73,6 +73,7 @@ public:
 	void SwapToFire();
 	void SwapToWater();
 	void SwapToAir();
+	void StopTime();
 
 	void OnStartFire();
 	void OnStopFire();

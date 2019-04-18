@@ -54,6 +54,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, category = "Hit Results")
 	FString Color;
-
+	
 };
 

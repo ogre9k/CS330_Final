@@ -12,6 +12,7 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "CS330_FinalGameMode.h"
 #include "Sound/SoundBase.h"
 
 const FName APlayerCharacter::MoveForwardBinding("MoveForward");
@@ -94,8 +95,20 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction(FName("OneKey"), IE_Released, this, &APlayerCharacter::SwapToFire);
 	PlayerInputComponent->BindAction(FName("TwoKey"), IE_Released, this, &APlayerCharacter::SwapToWater);
 	PlayerInputComponent->BindAction(FName("ThreeKey"), IE_Released, this, &APlayerCharacter::SwapToAir);
+	//PlayerInputComponent->BindAction(FName("FourKey"), IE_Released, this, &APlayerCharacter::StopTime);
 }
 
+void APlayerCharacter::StopTime()
+{
+	ACS330_FinalGameMode* GameMode = Cast<ACS330_FinalGameMode>(GetWorld()->GetAuthGameMode());
+	if (GameMode)
+	{
+		if (GameMode->TimeStopped)
+			GameMode ->TimeStopped = false;
+		else
+			GameMode->TimeStopped = true;
+	}
+}
 void APlayerCharacter::SwapToFire()
 {
 	if (FireBullet != NULL)
