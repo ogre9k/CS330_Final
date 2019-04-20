@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CardEFfect.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -23,6 +24,7 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
 	FString Color;
 	/** Offset from the ships location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
@@ -49,18 +51,27 @@ public:
 
 	/* Fire a shot in the specified direction */
 	void FireShot();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	bool ComboAnimFlag;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	bool Shooting;
+	UFUNCTION(BlueprintCallable)
 	void UpdateMouseLook();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	bool UpdateFacing;
 	FRotator LastRotation;
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> Bullet;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
+		TSubclassOf<class ACardEffect> StagedCard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> FireBullet;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> WaterBullet;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> AirBullet;
 
 	// Static names for axis bindings
@@ -70,10 +81,6 @@ public:
 	static const FName FireRightBinding;
 	static const FName FireBinding;
 
-	void SwapToFire();
-	void SwapToWater();
-	void SwapToAir();
-	void StopTime();
 
 	void OnStartFire();
 	void OnStopFire();

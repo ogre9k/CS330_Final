@@ -56,49 +56,15 @@ void AWizardCharacter::FireShot()
 			}
 		}
 	}
-}
 
-float AWizardCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
-	AController* EventInstigator, AActor* DamageCauser)
-{
-	float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-
-	if (ActualDamage > 0.0f)
+	if (ComboAnimFlag)
 	{
-		
-		
-		HP -= ActualDamage;
-		if (HP <= 0.0f)
-		{
-			//dead
-			bCanBeDamaged = false;
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEffect, GetActorLocation());
-			//float DeathCountdown = PlayAnimMontage(DeathAnim);
-			//GetWorldTimerManager().SetTimer(DeathTimer, this, &AWizardCharacter::Kill, DeathCountdown, false, DeathCountdown-0.75f);
-			//UE_LOG(LogTemp, Warning, TEXT("Wizard Dead"));
-			Destroy();
-		}
+		ComboAnimFlag = false;
+		PlayAnimMontage(AttackAnim2, 2.0f);
 	}
-
-	return ActualDamage;
-}
-
-void AWizardCharacter::Kill()
-{
-	Destroy();
-}
-
-void AWizardCharacter::UpdateFacing()
-{
-	const UWorld* World = GetWorld();
-	if (World)
+	else
 	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
-		if (PlayerCharacter)
-		{
-			FVector targetLocation = PlayerCharacter->GetActorLocation();
-			FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), targetLocation);
-			SetActorRotation(FRotator(0.0f, NewRot.Yaw, 0.f));
-		}
+		ComboAnimFlag = true;
+		PlayAnimMontage(AttackAnim1, 2.0f);
 	}
 }
