@@ -55,7 +55,7 @@ APlayerCharacter::APlayerCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when ship does
-	CameraBoom->TargetArmLength = 1200.f;
+	CameraBoom->TargetArmLength = 1700.f;
 	CameraBoom->RelativeRotation = FRotator(-80.f, 0.f, 0.f);
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
@@ -92,46 +92,6 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis(FireRightBinding);
 	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &APlayerCharacter::OnStartFire);
 	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &APlayerCharacter::OnStopFire);
-	PlayerInputComponent->BindAction(FName("OneKey"), IE_Released, this, &APlayerCharacter::SwapToFire);
-	PlayerInputComponent->BindAction(FName("TwoKey"), IE_Released, this, &APlayerCharacter::SwapToWater);
-	PlayerInputComponent->BindAction(FName("ThreeKey"), IE_Released, this, &APlayerCharacter::SwapToAir);
-	//PlayerInputComponent->BindAction(FName("FourKey"), IE_Released, this, &APlayerCharacter::StopTime);
-}
-
-void APlayerCharacter::StopTime()
-{
-	ACS330_FinalGameMode* GameMode = Cast<ACS330_FinalGameMode>(GetWorld()->GetAuthGameMode());
-	if (GameMode)
-	{
-		if (GameMode->TimeStopped)
-			GameMode ->TimeStopped = false;
-		else
-			GameMode->TimeStopped = true;
-	}
-}
-void APlayerCharacter::SwapToFire()
-{
-	if (FireBullet != NULL)
-	{
-		Bullet = FireBullet;
-		Color = "Red";
-	}
-}
-void APlayerCharacter::SwapToWater()
-{
-	if (WaterBullet != NULL)
-	{
-		Bullet = WaterBullet;
-		Color = "Blue";
-	}
-}
-void APlayerCharacter::SwapToAir()
-{
-	if (AirBullet != NULL)
-	{
-		Bullet = AirBullet;
-		Color = "Green";
-	}
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)

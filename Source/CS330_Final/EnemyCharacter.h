@@ -22,7 +22,22 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable)
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
+		AController* EventInstigator, AActor* DamageCauser);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float HP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float DMG;
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+		UParticleSystem* DeathEffect;
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+		UAnimMontage* DeathAnim;
+
+	FTimerHandle DeathTimer;
+	void UpdateFacing();
+	void Kill();
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

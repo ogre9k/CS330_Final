@@ -7,6 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/Particles/ParticleSystem.h"
+#include "EnemyProjectile.h"
 #include "Runtime/Engine/Classes/Particles/ParticleEmitter.h"
 #include "WizardCharacter.h"
 #include "Engine/StaticMesh.h"

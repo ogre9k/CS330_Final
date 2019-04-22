@@ -18,27 +18,17 @@ public:
 	// Sets default values for this character's properties
 	AWizardCharacter();
 
+
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
-	UAnimMontage* DeathAnim;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	UParticleSystem* DeathEffect;
-
+		UAnimMontage* AttackAnim1;
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+		UAnimMontage* AttackAnim2;
+	bool ComboAnimFlag;
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon Stats")
 		TSubclassOf<class ACS330_FinalProjectile> Bullet;
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
-	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
-	AController* EventInstigator, AActor* DamageCauser);
-
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	float HP;
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	float DMG;
-	FTimerHandle DeathTimer;
-	void UpdateFacing();
-	void Kill();
 
 	void FireShot();
 	/** Offset from the ships location to spawn projectiles */
