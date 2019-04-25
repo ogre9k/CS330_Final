@@ -40,7 +40,7 @@ void AWizardCharacter::FireShot()
 	{
 		if (!GameMode->TimeStopped)
 		{
-			
+
 			FVector FireDirection = GetActorForwardVector();
 
 
@@ -70,8 +70,8 @@ float AWizardCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 
 	if (ActualDamage > 0.0f)
 	{
-		
-		
+
+
 		HP -= ActualDamage;
 		if (HP <= 0.0f)
 		{
