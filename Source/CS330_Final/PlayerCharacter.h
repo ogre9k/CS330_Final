@@ -59,6 +59,7 @@ public:
 	void UpdateMouseLook();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	bool UpdateFacing;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	FRotator LastRotation;
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
