@@ -8,14 +8,19 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 #include "CS330_FinalGameMode.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ProjectileEnemyController.h"
 
 
 AWizardCharacter::AWizardCharacter()
 {
+	// Set up AI Controller Class
+	AIControllerClass = AProjectileEnemyController::StaticClass();
+
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireMin = 0.5f;
 	FireMax = 1.f;
+
 }
 void AWizardCharacter::Tick(float DeltaSeconds)
 {
@@ -56,15 +61,50 @@ void AWizardCharacter::FireShot()
 			}
 		}
 	}
+}
 
-	if (ComboAnimFlag)
+float AWizardCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
+	AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	if (ActualDamage > 0.0f)
 	{
-		ComboAnimFlag = false;
-		PlayAnimMontage(AttackAnim2, 2.0f);
+
+
+		HP -= ActualDamage;
+		if (HP <= 0.0f)
+		{
+			//dead
+			bCanBeDamaged = false;
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEffect, GetActorLocation());
+			//float DeathCountdown = PlayAnimMontage(DeathAnim);
+			//GetWorldTimerManager().SetTimer(DeathTimer, this, &AWizardCharacter::Kill, DeathCountdown, false, DeathCountdown-0.75f);
+			//UE_LOG(LogTemp, Warning, TEXT("Wizard Dead"));
+			Destroy();
+		}
 	}
-	else
+
+	return ActualDamage;
+}
+
+void AWizardCharacter::Kill()
+{
+	Destroy();
+}
+
+
+void AWizardCharacter::UpdateFacing()
+{
+	const UWorld* World = GetWorld();
+	if (World)
 	{
-		ComboAnimFlag = true;
-		PlayAnimMontage(AttackAnim1, 2.0f);
+		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+		if (PlayerCharacter)
+		{
+			FVector targetLocation = PlayerCharacter->GetActorLocation();
+			FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), targetLocation);
+			SetActorRotation(FRotator(0.0f, NewRot.Yaw, 0.f));
+		}
 	}
 }

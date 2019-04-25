@@ -7,30 +7,33 @@
 #include "WizardCharacter.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class CS330_FINAL_API AWizardCharacter : public AEnemyCharacter
 {
 	GENERATED_BODY()
-	
+
 public:
 	// Sets default values for this character's properties
 	AWizardCharacter();
 
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
-		UAnimMontage* AttackAnim1;
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
-		UAnimMontage* AttackAnim2;
-	bool ComboAnimFlag;
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon Stats")
 		TSubclassOf<class ACS330_FinalProjectile> Bullet;
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
+	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
+		AController* EventInstigator, AActor* DamageCauser);
+
+	FTimerHandle DeathTimer;
+	void UpdateFacing();
+	void Kill();
+
 
 	void FireShot();
+
 	/** Offset from the ships location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		FVector GunOffset;
