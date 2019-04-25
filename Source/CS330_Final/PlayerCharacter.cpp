@@ -41,6 +41,8 @@ APlayerCharacter::APlayerCharacter()
 		AirBullet = AirBulletBPClass.Class;
 	}
 
+	HP = 20;
+	MP = 3;
 	Color = "Red";
 	ComboAnimFlag = false;
 	Shooting = false;
@@ -210,15 +212,16 @@ void APlayerCharacter::FireShot()
 	*/
 
 	//This handles swapping between left and right hand animation every time we fire
+	float AnimSpeed = 18.75 * FireRate; //18.75 is a constant I determined based off testing
 	if (ComboAnimFlag)
 	{
 		ComboAnimFlag = false;
-		PlayAnimMontage(AttackAnim2, 3.0f);
+		PlayAnimMontage(AttackAnim2, AnimSpeed);
 	}
 	else
 	{
 		ComboAnimFlag = true;
-		PlayAnimMontage(AttackAnim1, 3.0f);
+		PlayAnimMontage(AttackAnim1, AnimSpeed);
 	}
 
 	const FRotator FireRotation = FireDirection.Rotation();

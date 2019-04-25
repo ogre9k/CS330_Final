@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CardEFfect.h"
+#include "Deck.h"
+#include "DeckHandler.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -23,6 +25,8 @@ class CS330_FINAL_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
+	ADeckHandler* MyDeck;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
 	FString Color;
@@ -31,7 +35,7 @@ public:
 		FVector GunOffset;
 
 	/* How fast the weapon will fire */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float FireRate;
 
 	/* The speed our ship moves around the level */
@@ -49,6 +53,15 @@ public:
 		AController* EventInstigator, AActor* DamageCauser);
 	// End Actor Interface
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float HP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float MP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
+		TSubclassOf<class ACardEffect> CardToUse;
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void UseCard();
+
 	/* Fire a shot in the specified direction */
 	void FireShot();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
@@ -59,14 +72,14 @@ public:
 	void UpdateMouseLook();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	bool UpdateFacing;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	FRotator LastRotation;
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> Bullet;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
-		TSubclassOf<class ACardEffect> StagedCard;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> FireBullet;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
@@ -81,8 +94,9 @@ public:
 	static const FName FireRightBinding;
 	static const FName FireBinding;
 
-
+	UFUNCTION(BlueprintCallable)
 	void OnStartFire();
+	UFUNCTION(BlueprintCallable)
 	void OnStopFire();
 	FTimerHandle FireTimer;
 
@@ -90,9 +104,9 @@ public:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* AttackAnim1;
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* AttackAnim2;
 
 	/** Returns CameraComponent subobject **/

@@ -49,7 +49,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Hit Results")
 	float HitForce;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Hit Results")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hit Results")
     float Damage;
 
 	UPROPERTY(EditDefaultsOnly, category = "Hit Results")
