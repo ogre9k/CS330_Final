@@ -7,6 +7,8 @@ AProjectileEnemyController::AProjectileEnemyController()
 {
 	minRange = 600.0f;
 	maxRange = 800.0f;
+	noiseSeed = FMath::RandRange(0.0f, 1.0f);
+
 }
 
 void AProjectileEnemyController::BeginPlay()
@@ -92,6 +94,9 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 					WizardCharacter->AddMovementInput(-EnemyToPlayer, WizardCharacter->MoveSpeed, false);
 				}
 			}
+			FVector HorizontalMotion = WizardCharacter->GetActorRightVector();
+			HorizontalMotion = HorizontalMotion * FMath::PerlinNoise1D(noiseSeed);
+			WizardCharacter->AddMovementInput(HorizontalMotion, WizardCharacter->MoveSpeed / 2, false);
 		}
 		break;
 	case EDead:
@@ -104,5 +109,6 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 
 void AProjectileEnemyController::Tick(float DeltaTime)
 {
+	noiseSeed += 0.01;
 	HandleCurrentState(CurrentState);
 }

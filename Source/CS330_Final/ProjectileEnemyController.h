@@ -44,6 +44,8 @@ protected:
 		float minRange;
 	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
 		float maxRange;
+	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
+		float noiseSeed;
 
 	void Tick(float DeltaTime) override;
 	
