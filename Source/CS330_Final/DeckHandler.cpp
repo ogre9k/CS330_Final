@@ -44,21 +44,64 @@ ADeckHandler::ADeckHandler()
 	_deck.Add(Fireball.Class);
 	_deck.Add(Boomerang.Class);
 
-	_hand.Add(_deck[0]);
-	_hand.Add(_deck[3]);
-	_hand.Add(_deck[4]);
+	// Generate a dynamic seed based on time
+	// (Required because apparently a packaged game will not generate a random stream naturally like in the editor)
+	FRandomStream SRand = FRandomStream();
+	SRand.Initialize(FDateTime::Now().ToUnixTimestamp());
+
+	// Draw from the deck 3 times. Start at a random point in the deck.
+	// Increment by 1, looping back to index 0 if the iterator exceeds the deck size.
+	int i = FMath::FloorToInt(FMath::Rand() % _deck.Num());
+	for (int j = 0; j < 3; j++)
+	{
+		// Add a card to the hand.
+		_hand.Add(_deck[i]);
+		// Remove that same card from the deck.
+		_deck.RemoveAt(i, 1, true);
+		// Increment i through the deck.
+		i = (i + 1) % _deck.Num();
+	}
 
 	DeckCounter = _deck.Num() - 1;
 }
 
 void ADeckHandler::Shuffle()
 {
-	;
+	// Add the discard pile back into the deck.
+	for (int i = 0; i < _discard.Num(); i++)
+	{
+		_deck.Add(_discard[i]);
+	}
+
+	// Shuffle the deck.
+	int shuffleIterations = 10;
+	for (int i = 0; i < shuffleIterations; i++)
+	{
+		int j = FMath::FloorToInt(FMath::Rand() % _deck.Num());
+		int k = FMath::FloorToInt(FMath::Rand() % _deck.Num());
+		_deck.Swap(j, k);
+	}
 }
 
 void ADeckHandler::Draw() 
 {
-	;
+	if (_hand.Num() < 3)
+	{
+		// If the deck is empty, call the shuffle function.
+		if (_deck.Num() == 0)
+			Shuffle();
+		// Draw the first card of the deck and add it to hand.
+		_hand.Add(_deck[0]);
+		// Remove the first card from the deck.
+		_deck.RemoveAt(0, 1, true);
+	}
+}
+
+void ADeckHandler::Discard(int index)
+{
+	// After using a card, remove it from _hand and place it in the _discard pile.
+	_discard.Add(_hand[index]);
+	// No need to draw since we're drawing in between "rooms"/"phases".
 }
 
 void ADeckHandler::UseCard(float index)
@@ -77,7 +120,9 @@ void ADeckHandler::UseCard(float index)
 				PlayerCharacter->CardToUse = _hand[index];
 				PlayerCharacter->UseCard();
 				_usedCards[index] = true;
-
+				// Call to Discard. Needs clarification on whether or not we'll be removing from _hand right away
+				// or if only updating this between "rooms"/"phases".
+				// Discard(FMath::FloorToInt(index));
 			}
 		}
 	}

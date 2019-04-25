@@ -27,8 +27,7 @@ public:
 
 	void Shuffle();
 	void Draw();
-	void Discard();
-
+	void Discard(int index);
 
 	// Card Effects
 	//Cantrips
