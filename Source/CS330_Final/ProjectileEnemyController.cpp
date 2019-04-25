@@ -2,6 +2,7 @@
 
 #include "ProjectileEnemyController.h"
 #include "WizardCharacter.h"
+#include "CS330_FinalGameMode.h"
 
 AProjectileEnemyController::AProjectileEnemyController()
 {
@@ -104,5 +105,8 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 
 void AProjectileEnemyController::Tick(float DeltaTime)
 {
-	HandleCurrentState(CurrentState);
+	ACS330_FinalGameMode* GameMode = Cast<ACS330_FinalGameMode>(GetWorld()->GetAuthGameMode());
+	if (!GameMode->TimeStopped) {
+		HandleCurrentState(CurrentState);
+	}
 }

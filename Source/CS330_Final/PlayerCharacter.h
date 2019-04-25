@@ -31,7 +31,7 @@ public:
 		FVector GunOffset;
 
 	/* How fast the weapon will fire */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float FireRate;
 
 	/* The speed our ship moves around the level */
@@ -81,8 +81,9 @@ public:
 	static const FName FireRightBinding;
 	static const FName FireBinding;
 
-
+	UFUNCTION(BlueprintCallable)
 	void OnStartFire();
+	UFUNCTION(BlueprintCallable)
 	void OnStopFire();
 	FTimerHandle FireTimer;
 
@@ -90,9 +91,9 @@ public:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* AttackAnim1;
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* AttackAnim2;
 
 	/** Returns CameraComponent subobject **/
