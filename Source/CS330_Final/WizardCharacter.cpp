@@ -8,14 +8,19 @@
 #include "Runtime/Core/Public/Math/UnrealMathUtility.h"
 #include "CS330_FinalGameMode.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ProjectileEnemyController.h"
 
 
 AWizardCharacter::AWizardCharacter()
 {
+	// Set up AI Controller Class
+	AIControllerClass = AProjectileEnemyController::StaticClass();
+
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireMin = 0.5f;
 	FireMax = 1.f;
+
 }
 void AWizardCharacter::Tick(float DeltaSeconds)
 {
@@ -35,7 +40,7 @@ void AWizardCharacter::FireShot()
 	{
 		if (!GameMode->TimeStopped)
 		{
-
+			
 			FVector FireDirection = GetActorForwardVector();
 
 
@@ -87,6 +92,7 @@ void AWizardCharacter::Kill()
 {
 	Destroy();
 }
+
 
 void AWizardCharacter::UpdateFacing()
 {

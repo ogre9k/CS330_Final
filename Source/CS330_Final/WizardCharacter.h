@@ -40,7 +40,9 @@ public:
 	void UpdateFacing();
 	void Kill();
 
+
 	void FireShot();
+
 	/** Offset from the ships location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		FVector GunOffset;
