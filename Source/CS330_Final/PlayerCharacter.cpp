@@ -41,6 +41,8 @@ APlayerCharacter::APlayerCharacter()
 		AirBullet = AirBulletBPClass.Class;
 	}
 
+	HP = 20;
+	MP = 3;
 	Color = "Red";
 	ComboAnimFlag = false;
 	Shooting = false;

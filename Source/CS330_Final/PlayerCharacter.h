@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CardEFfect.h"
+#include "Deck.h"
+#include "DeckHandler.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -23,6 +25,8 @@ class CS330_FINAL_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
+	ADeckHandler* MyDeck;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Statistics")
 	FString Color;
@@ -49,6 +53,15 @@ public:
 		AController* EventInstigator, AActor* DamageCauser);
 	// End Actor Interface
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float HP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float MP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
+		TSubclassOf<class ACardEffect> CardToUse;
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void UseCard();
+
 	/* Fire a shot in the specified direction */
 	void FireShot();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
@@ -66,8 +79,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> Bullet;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
-		TSubclassOf<class ACardEffect> StagedCard;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> FireBullet;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
