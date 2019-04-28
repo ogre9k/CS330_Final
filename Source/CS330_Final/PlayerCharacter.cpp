@@ -252,7 +252,11 @@ float APlayerCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 
 	if (ActualDamage > 0.0f)
 	{
-
+		HP -= Damage;
+		if (HP <= 0) 
+		{
+			Destroy();
+		}
 
 		;
 	}
