@@ -22,6 +22,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shooting)
 		float FireRate;
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		float FireMin;
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		float FireMax;
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		bool RandomFireRate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shooting)
 		TArray<TSubclassOf<class AEnemyProjectile>> Bullets;
 
@@ -36,6 +42,8 @@ public:
 		FVector Right;
 	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
 		FVector Center;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		FVector Player;
 
 	UFUNCTION(BlueprintCallable)
 		void StartFire();
@@ -44,6 +52,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void FireShot();
 	FTimerHandle FireTimer;
+
 
 	UFUNCTION(BlueprintCallable)
 		void UpdateOffsets();

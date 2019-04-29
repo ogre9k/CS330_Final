@@ -2,6 +2,7 @@
 
 #include "EnemyCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "CS330_FinalGameMode.h"
 #include "Runtime/Engine/Classes/Particles/ParticleSystem.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "PlayerCharacter.h"
@@ -70,12 +71,16 @@ void AEnemyCharacter::UpdateFacing()
 	const UWorld* World = GetWorld();
 	if (World)
 	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
-		if (PlayerCharacter)
+		ACS330_FinalGameMode* GameMode = Cast<ACS330_FinalGameMode>(GetWorld()->GetAuthGameMode());
+		if (!GameMode->TimeStopped)
 		{
-			FVector targetLocation = PlayerCharacter->GetActorLocation();
-			FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), targetLocation);
-			SetActorRotation(FRotator(0.0f, NewRot.Yaw, 0.f));
+			APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+			if (PlayerCharacter)
+			{
+				FVector targetLocation = PlayerCharacter->GetActorLocation();
+				FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), targetLocation);
+				SetActorRotation(FRotator(0.0f, NewRot.Yaw, 0.f));
+			}
 		}
 	}
 }

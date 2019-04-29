@@ -45,8 +45,6 @@ public:
 		float FireMax;
 	float FireRate;
 	/* The speed our ship moves around the level */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-		float MoveSpeed;
 
 	FTimerHandle FireTimer;
 };
