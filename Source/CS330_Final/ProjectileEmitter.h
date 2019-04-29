@@ -28,6 +28,8 @@ public:
 		float FireMax;
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		bool RandomFireRate;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		bool Shooting;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shooting)
 		TArray<TSubclassOf<class AEnemyProjectile>> Bullets;
 

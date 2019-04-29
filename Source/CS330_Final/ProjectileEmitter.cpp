@@ -17,6 +17,7 @@ AProjectileEmitter::AProjectileEmitter()
 
 	DirectionArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("DirectionArrow"));
 	RootComponent = DirectionArrow;
+	Shooting = false;
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +36,7 @@ void AProjectileEmitter::Tick(float DeltaTime)
 
 void AProjectileEmitter::StartFire()
 {
+	Shooting = true;
 	if (RandomFireRate)
 		GetWorldTimerManager().SetTimer(FireTimer, this, &AProjectileEmitter::FireShot, FMath::RandRange(FireMin, FireMax), true, 0.0f);
 	else
@@ -43,6 +45,7 @@ void AProjectileEmitter::StartFire()
 
 void AProjectileEmitter::StopFire()
 {
+	Shooting = false;
 	GetWorldTimerManager().ClearTimer(FireTimer);
 }
 
