@@ -29,6 +29,49 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	int FinalPhase;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+		UAnimMontage* AttackAnim1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+		UAnimMontage* AttackAnim2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		bool ComboAnimFlag;
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ChangePhase(); // called when the boss' hp reaches 0 and it needs to change phases or die
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shooting)
+		float FireRate;
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		float FireMin;
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		float FireMax;
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		bool RandomFireRate;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		bool Shooting;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shooting)
+		TArray<TSubclassOf<class AEnemyProjectile>> Bullets;
+
+	// Bullet offset positions
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		FVector Front;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		FVector Left;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		FVector Back;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		FVector Right;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		FVector Center;
+	UPROPERTY(Category = Offsets, EditAnywhere, BlueprintReadWrite)
+		FVector Player;
+
+	UFUNCTION(BlueprintCallable)
+		void StartFire();
+	UFUNCTION(BlueprintCallable)
+		void StopFire();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void FireShot();
+	FTimerHandle FireTimer;
+	UFUNCTION(BlueprintCallable)
+		void UpdateOffsets();
 };

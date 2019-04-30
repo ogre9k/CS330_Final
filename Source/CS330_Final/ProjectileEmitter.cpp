@@ -2,6 +2,8 @@
 
 #include "ProjectileEmitter.h"
 #include "TimerManager.h"
+#include "PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 // Children must add bullets to the bullets array and implement the FireShot event. 
 // They also need to control when firing starts and stops.
@@ -15,6 +17,7 @@ AProjectileEmitter::AProjectileEmitter()
 
 	DirectionArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("DirectionArrow"));
 	RootComponent = DirectionArrow;
+	Shooting = false;
 }
 
 // Called when the game starts or when spawned
@@ -33,11 +36,16 @@ void AProjectileEmitter::Tick(float DeltaTime)
 
 void AProjectileEmitter::StartFire()
 {
-	GetWorldTimerManager().SetTimer(FireTimer, this, &AProjectileEmitter::FireShot, FireRate, true, 0.0f);
+	Shooting = true;
+	if (RandomFireRate)
+		GetWorldTimerManager().SetTimer(FireTimer, this, &AProjectileEmitter::FireShot, FMath::RandRange(FireMin, FireMax), true, 0.0f);
+	else
+		GetWorldTimerManager().SetTimer(FireTimer, this, &AProjectileEmitter::FireShot, FireRate, true, 0.0f);
 }
 
 void AProjectileEmitter::StopFire()
 {
+	Shooting = false;
 	GetWorldTimerManager().ClearTimer(FireTimer);
 }
 
@@ -49,9 +57,14 @@ void AProjectileEmitter::UpdateOffsets()
 	const FRotator FireRotation = FireDirection.Rotation();
 	FVector Location = GetActorLocation();
 
+	const UWorld* World = GetWorld();
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+
 	Front = Location + FireRotation.RotateVector(FVector(90.f,0.f,0.f));
 	Left = Location + FireRotation.RotateVector(FVector(0.f, -90.f, 0.f));
 	Back = Location + FireRotation.RotateVector(FVector(-90.f, 0.f, 0.f));
 	Right = Location + FireRotation.RotateVector(FVector(0.f, 90.f, 0.f));
 	Center = Location;
+	Player = PlayerCharacter->GetActorLocation();
+	
 }
