@@ -41,6 +41,12 @@ APlayerCharacter::APlayerCharacter()
 		AirBullet = AirBulletBPClass.Class;
 	}
 
+	ConstructorHelpers::FClassFinder<ACardEffect> HitEffectClass(TEXT("/Game/Blueprints/Cards/BP_CHitEffect"));
+	if (HitEffectClass.Class != NULL)
+	{
+		HitEffect = HitEffectClass.Class;
+	}
+
 	HP = 20;
 	MP = 3;
 	Color = "Red";
@@ -52,6 +58,10 @@ APlayerCharacter::APlayerCharacter()
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
 	FireSound = FireAudio.Object;
+
+	// Cache our sound effect
+	static ConstructorHelpers::FObjectFinder<USoundBase> HitAudio(TEXT("/Game/OurAudio/HitSound.HitSound"));
+	HitSound = HitAudio.Object;
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -250,16 +260,34 @@ float APlayerCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 {
 	float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-	if (ActualDamage > 0.0f)
+	if (ActualDamage > 0.0f && bCanBeDamaged)
 	{
 		HP -= Damage;
 		if (HP <= 0) 
 		{
 			Destroy();
 		}
-
-		;
+		UE_LOG(LogTemp, Warning, TEXT("Invuln Set"));
+		// try and play the sound if specified
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+		}
+		bCanBeDamaged = false;
+		UWorld* const World = GetWorld();
+		if (World != NULL)
+		{
+			World->SpawnActor<ACardEffect>(HitEffect, GetActorLocation(), GetActorRotation());
+		}
+		GetWorldTimerManager().SetTimer(HitInvulnTimer, this, &APlayerCharacter::RemoveHitInvuln, 2.0f, true, 2.0f);
 	}
 
 	return ActualDamage;
+}
+
+void APlayerCharacter::RemoveHitInvuln()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Invuln Cleared"));
+	bCanBeDamaged = true;
+	GetWorldTimerManager().ClearTimer(HitInvulnTimer);
 }

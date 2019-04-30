@@ -12,7 +12,7 @@ void AEnemyProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 	if (OtherActor != NULL && OtherActor != this && !Cast<AEnemyCharacter>(OtherActor))
 	{
 		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		if (OtherActor == PlayerCharacter && PlayerCharacter->Color != this->Color) {
+		if (OtherActor == PlayerCharacter && PlayerCharacter->Color != this->Color && PlayerCharacter->bCanBeDamaged) {
 			OtherActor->TakeDamage(Damage, FDamageEvent(), GetInstigatorController(), this);
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation());
 			Destroy();
