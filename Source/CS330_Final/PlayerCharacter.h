@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CardEFfect.h"
-#include "Deck.h"
 #include "DeckHandler.h"
 #include "PlayerCharacter.generated.h"
 
