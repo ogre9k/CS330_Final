@@ -44,40 +44,107 @@ ADeckHandler::ADeckHandler()
 	_deck.Add(Fireball.Class);
 	_deck.Add(Boomerang.Class);
 
-	_hand.Add(_deck[0]);
-	_hand.Add(_deck[3]);
-	_hand.Add(_deck[4]);
+	// Generate a dynamic seed based on time
+	// (Required because apparently a packaged game will not generate a random stream naturally like in the editor)
+	FRandomStream SRand = FRandomStream();
+	SRand.Initialize(FDateTime::Now().ToUnixTimestamp());
+
+	// Draw from the deck 3 times. Start at a random point in the deck.
+	// Increment by 1, looping back to index 0 if the iterator exceeds the deck size.
+	int i = FMath::FloorToInt(FMath::Rand() % _deck.Num());
+	for (int j = 0; j < 3; j++)
+	{
+		// Add a card to the hand.
+		_hand.Add(_deck[i]);
+		// Remove that same card from the deck.
+		_deck.RemoveAt(i, 1, true);
+		// Increment i through the deck.
+		i = (i + 1) % _deck.Num();
+	}
 
 	DeckCounter = _deck.Num() - 1;
 }
 
 void ADeckHandler::Shuffle()
 {
-	;
+	// Add the discard pile back into the deck.
+	for (int i = 0; i < _discard.Num(); i++)
+	{
+		_deck.Add(_discard[0]);	
+		_discard.RemoveAt(0, 1, true);
+	}
+
+	// Shuffle the deck.
+	int shuffleIterations = 15;
+	for (int i = 0; i < shuffleIterations; i++)
+	{
+		int j = FMath::FloorToInt(FMath::Rand() % _deck.Num());
+		int k = FMath::FloorToInt(FMath::Rand() % _deck.Num());
+		_deck.Swap(j, k);
+	}
 }
 
 void ADeckHandler::Draw() 
 {
-	;
+	UE_LOG(LogTemp, Warning, TEXT("Drawing cards..."));
+	for (int i = 0; i < 3; i++)
+	{
+		// If the deck is empty, call the shuffle function.
+		if (_deck.Num() == 0)
+			Shuffle();
+		// Draw the first card of the deck and add it to hand.
+		_hand.Add(_deck[0]);
+		// Remove the first card from the deck.
+		_deck.RemoveAt(0, 1, true);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Done drawing. You have %d cards in your hand."), _hand.Num());
 }
 
-void ADeckHandler::UseCard(float index)
+void ADeckHandler::DiscardHand()
+{
+	// Discard the hand
+	for (int i = 0; i < 3; i++)
+	{
+		// Remove one card from the hand at a time and put it into the discard pile.
+		_discard.Add(_hand[0]);
+		_hand.RemoveAt(0, 1, true);
+	}
+
+	// Repopulate the hand
+	Draw();
+
+	// Reset the usedCards flags
+	for (int i = 0; i < _usedCards.Num(); i++)
+	{
+		_usedCards[i] = false;
+	}
+}
+
+void ADeckHandler::UseCard(int index)
 {
 	//Access default variables like this
 	//DO NOT CHANGE THEM - They will change for all instances of this object for the current game
 	//_hand[index]->GetDefaultObject<ACardEffect>()->ManaCost
 
-	const UWorld* World = GetWorld();
-	if (World)
+	// Testing functionality
+	if (_usedCards[0] && _usedCards[1] && _usedCards[2])
 	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
-		if (PlayerCharacter)
+		UE_LOG(LogTemp, Warning, TEXT("Hand is empty. Attempting to re-draw."));
+		DiscardHand();
+	}
+	else
+	{
+		const UWorld* World = GetWorld();
+		if (World)
 		{
-			if (_usedCards[index] != true) {
-				PlayerCharacter->CardToUse = _hand[index];
-				PlayerCharacter->UseCard();
-				_usedCards[index] = true;
-
+			APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+			if (PlayerCharacter)
+			{
+				if (_usedCards[index] != true) {
+					PlayerCharacter->CardToUse = _hand[index];
+					PlayerCharacter->UseCard();
+					_usedCards[index] = true;			
+				}
 			}
 		}
 	}
