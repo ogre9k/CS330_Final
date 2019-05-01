@@ -70,11 +70,12 @@ void ADeckHandler::Shuffle()
 	// Add the discard pile back into the deck.
 	for (int i = 0; i < _discard.Num(); i++)
 	{
-		_deck.Add(_discard[i]);
+		_deck.Add(_discard[0]);	
+		_discard.RemoveAt(0, 1, true);
 	}
 
 	// Shuffle the deck.
-	int shuffleIterations = 10;
+	int shuffleIterations = 15;
 	for (int i = 0; i < shuffleIterations; i++)
 	{
 		int j = FMath::FloorToInt(FMath::Rand() % _deck.Num());
@@ -85,7 +86,8 @@ void ADeckHandler::Shuffle()
 
 void ADeckHandler::Draw() 
 {
-	if (_hand.Num() < 3)
+	UE_LOG(LogTemp, Warning, TEXT("Drawing cards..."));
+	for (int i = 0; i < 3; i++)
 	{
 		// If the deck is empty, call the shuffle function.
 		if (_deck.Num() == 0)
@@ -95,34 +97,54 @@ void ADeckHandler::Draw()
 		// Remove the first card from the deck.
 		_deck.RemoveAt(0, 1, true);
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Done drawing. You have %d cards in your hand."), _hand.Num());
 }
 
-void ADeckHandler::Discard(int index)
+void ADeckHandler::DiscardHand()
 {
-	// After using a card, remove it from _hand and place it in the _discard pile.
-	_discard.Add(_hand[index]);
-	// No need to draw since we're drawing in between "rooms"/"phases".
+	// Discard the hand
+	for (int i = 0; i < 3; i++)
+	{
+		// Remove one card from the hand at a time and put it into the discard pile.
+		_discard.Add(_hand[0]);
+		_hand.RemoveAt(0, 1, true);
+	}
+
+	// Repopulate the hand
+	Draw();
+
+	// Reset the usedCards flags
+	for (int i = 0; i < _usedCards.Num(); i++)
+	{
+		_usedCards[i] = false;
+	}
 }
 
-void ADeckHandler::UseCard(float index)
+void ADeckHandler::UseCard(int index)
 {
 	//Access default variables like this
 	//DO NOT CHANGE THEM - They will change for all instances of this object for the current game
 	//_hand[index]->GetDefaultObject<ACardEffect>()->ManaCost
 
-	const UWorld* World = GetWorld();
-	if (World)
+	// Testing functionality
+	if (_usedCards[0] && _usedCards[1] && _usedCards[2])
 	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
-		if (PlayerCharacter)
+		UE_LOG(LogTemp, Warning, TEXT("Hand is empty. Attempting to re-draw."));
+		DiscardHand();
+	}
+	else
+	{
+		const UWorld* World = GetWorld();
+		if (World)
 		{
-			if (_usedCards[index] != true) {
-				PlayerCharacter->CardToUse = _hand[index];
-				PlayerCharacter->UseCard();
-				_usedCards[index] = true;
-				// Call to Discard. Needs clarification on whether or not we'll be removing from _hand right away
-				// or if only updating this between "rooms"/"phases".
-				// Discard(FMath::FloorToInt(index));
+			APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+			if (PlayerCharacter)
+			{
+				if (_usedCards[index] != true) {
+					PlayerCharacter->CardToUse = _hand[index];
+					PlayerCharacter->UseCard();
+					_usedCards[index] = true;			
+				}
 			}
 		}
 	}

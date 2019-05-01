@@ -17,8 +17,8 @@ class CS330_FINAL_API ADeckHandler : public AInfo
 public:
 	ADeckHandler();
 	UFUNCTION(BlueprintCallable)
-	void UseCard(float index);
-	float DeckCounter;
+	void UseCard(int index);
+	int DeckCounter;
 
 	TArray<TSubclassOf<class ACardEffect>> _deck;
 	TArray<TSubclassOf<class ACardEffect>> _hand;
@@ -27,7 +27,7 @@ public:
 
 	void Shuffle();
 	void Draw();
-	void Discard(int index);
+	void DiscardHand();
 
 	// Card Effects
 	//Cantrips
