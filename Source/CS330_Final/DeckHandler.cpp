@@ -118,6 +118,18 @@ void ADeckHandler::DiscardHand()
 	{
 		_usedCards[i] = false;
 	}
+
+	// Restore the Player's Mana
+	const UWorld* World = GetWorld();
+	if (World)
+	{
+		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+		if (PlayerCharacter)
+		{
+			PlayerCharacter->Mana = PlayerCharacter->MaxMana;
+			UE_LOG(LogTemp, Warning, TEXT("Mana restored! %d mana left."), PlayerCharacter->Mana);
+		}
+	}
 }
 
 void ADeckHandler::UseCard(int index)
@@ -127,6 +139,7 @@ void ADeckHandler::UseCard(int index)
 	//_hand[index]->GetDefaultObject<ACardEffect>()->ManaCost
 
 	// Testing functionality
+	/*
 	if (_usedCards[0] && _usedCards[1] && _usedCards[2])
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hand is empty. Attempting to re-draw."));
@@ -134,18 +147,33 @@ void ADeckHandler::UseCard(int index)
 	}
 	else
 	{
-		const UWorld* World = GetWorld();
-		if (World)
+	*/
+	const UWorld* World = GetWorld();
+	if (World)
+	{
+		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+		if (PlayerCharacter)
 		{
-			APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
-			if (PlayerCharacter)
+			int NetMana = PlayerCharacter->Mana - _hand[index]->GetDefaultObject<ACardEffect>()->ManaCost;
+			if (NetMana >= 0)
 			{
 				if (_usedCards[index] != true) {
+					PlayerCharacter->Mana = NetMana;
+					UE_LOG(LogTemp, Warning, TEXT("Mana expended! %d mana left."), PlayerCharacter->Mana);
 					PlayerCharacter->CardToUse = _hand[index];
 					PlayerCharacter->UseCard();
-					_usedCards[index] = true;			
+					_usedCards[index] = true;
 				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Card was already used. Wait until you draw more cards."));
+				}
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Not enough mana to use that card! %d mana left."), PlayerCharacter->Mana);
 			}
 		}
 	}
+	// }
 }
