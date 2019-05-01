@@ -27,6 +27,7 @@ public:
 
 	void Shuffle();
 	void Draw();
+	UFUNCTION(BlueprintCallable)
 	void DiscardHand();
 
 	// Card Effects
