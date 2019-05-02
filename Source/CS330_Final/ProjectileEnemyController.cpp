@@ -8,29 +8,30 @@ AProjectileEnemyController::AProjectileEnemyController()
 {
 	minRange = 600.0f;
 	maxRange = 800.0f;
+	noiseSeed = FMath::RandRange(0.0f, 1.0f);
 }
 
 void AProjectileEnemyController::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentState = EWizardAIState::EStart;
+	CurrentState = EAIState::EStart;
 }
 
 void AProjectileEnemyController::Possess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
-	WizardPawn = InPawn;
+	EnemyPawn = InPawn;
 }
 
 void AProjectileEnemyController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult & Result)
 {
 }
 
-void AProjectileEnemyController::SetState(EWizardAIState NewState)
+void AProjectileEnemyController::SetState(EAIState NewState)
 {
 	CurrentState = NewState;
 
-	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(WizardPawn);
+	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(EnemyPawn);
 
 	switch (NewState)
 	{
@@ -52,12 +53,12 @@ void AProjectileEnemyController::SetState(EWizardAIState NewState)
 	}
 }
 
-void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
+void AProjectileEnemyController::HandleCurrentState(EAIState NewState)
 {
 	APawn * Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(WizardPawn);
-	if (Player && WizardPawn) {
-		FVector EnemyToPlayer = Player->GetActorLocation() - WizardPawn->GetActorLocation();
+	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(EnemyPawn);
+	if (Player && EnemyPawn) {
+		FVector EnemyToPlayer = Player->GetActorLocation() - EnemyPawn->GetActorLocation();
 		float dist = EnemyToPlayer.Size();
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, FString::Printf(TEXT("Distance: %f"), dist));
@@ -66,14 +67,14 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 	switch (NewState)
 	{
 	case EStart:
-		SetState(EWizardAIState::EChase);
+		SetState(EAIState::EChase);
 		break;
 	case EChase:
-		if (Player && WizardPawn) {
-			FVector EnemyToPlayer = Player->GetActorLocation() - WizardPawn->GetActorLocation();
+		if (Player && EnemyPawn) {
+			FVector EnemyToPlayer = Player->GetActorLocation() - EnemyPawn->GetActorLocation();
 			float dist = EnemyToPlayer.Size();
 			if (dist <= minRange)
-				SetState(EWizardAIState::EStop);
+				SetState(EAIState::EStop);
 			if (EnemyCharacter) {
 				EnemyToPlayer.Normalize();
 				EnemyCharacter->AddMovementInput(EnemyToPlayer, EnemyCharacter->MoveSpeed, false);
@@ -82,17 +83,20 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 		}
 		break;
 	case EStop:
-		if (Player && WizardPawn) {
-			FVector EnemyToPlayer = Player->GetActorLocation() - WizardPawn->GetActorLocation();
+		if (Player && EnemyPawn) {
+			FVector EnemyToPlayer = Player->GetActorLocation() - EnemyPawn->GetActorLocation();
 			float dist = EnemyToPlayer.Size();
 			if (dist > maxRange)
-				SetState(EWizardAIState::EChase);
+				SetState(EAIState::EChase);
 			else if (dist < minRange) {
 				if (EnemyCharacter) {
 					EnemyToPlayer.Normalize();
 					EnemyCharacter->AddMovementInput(-EnemyToPlayer, EnemyCharacter->MoveSpeed, false);
 				}
 			}
+			FVector HorizontalMotion = EnemyCharacter->GetActorRightVector();
+			HorizontalMotion = HorizontalMotion * FMath::PerlinNoise1D(noiseSeed);
+			EnemyCharacter->AddMovementInput(HorizontalMotion, EnemyCharacter->MoveSpeed / 2, false);
 		}
 		break;
 	case EDead:
@@ -105,6 +109,7 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 
 void AProjectileEnemyController::Tick(float DeltaTime)
 {
+	noiseSeed += 0.01;
 	ACS330_FinalGameMode* GameMode = Cast<ACS330_FinalGameMode>(GetWorld()->GetAuthGameMode());
 	if (!GameMode->TimeStopped) {
 		HandleCurrentState(CurrentState);

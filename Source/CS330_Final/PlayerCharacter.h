@@ -41,7 +41,14 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		float MoveSpeed;
 
-	/** Sound to play each time we fire */
+	/* Holds the initial amount of mana the player starts with */
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		int MaxMana;
+	/* Mana expended to utilize cards */
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		int Mana;
+
+	/* Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 		class USoundBase* FireSound;
 

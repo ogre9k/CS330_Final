@@ -7,7 +7,7 @@
 #include "Engine.h"
 #include "ProjectileEnemyController.generated.h"
 
-enum EWizardAIState {
+enum EAIState {
 	EStart,
 	EChase,
 	EStop,
@@ -33,17 +33,19 @@ public:
 	
 
 protected:
-	APawn * WizardPawn;
+	APawn * EnemyPawn;
 
-	void SetState(EWizardAIState NewState);
-	void HandleCurrentState(EWizardAIState NewState);
+	void SetState(EAIState NewState);
+	void HandleCurrentState(EAIState NewState);
 
-	EWizardAIState CurrentState;
+	EAIState CurrentState;
 
 	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
 		float minRange;
 	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
 		float maxRange;
+	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
+		float noiseSeed;
 
 	void Tick(float DeltaTime) override;
 	
