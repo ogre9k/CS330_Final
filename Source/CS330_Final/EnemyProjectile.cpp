@@ -12,7 +12,7 @@ void AEnemyProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 	if (OtherActor != NULL && OtherActor != this && !Cast<AEnemyCharacter>(OtherActor))
 	{
 		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		if (OtherActor == PlayerCharacter && PlayerCharacter->Color != this->Color) {
+		if (OtherActor == PlayerCharacter && PlayerCharacter->Color != this->Color && PlayerCharacter->bCanBeDamaged) {
 			OtherActor->TakeDamage(Damage, FDamageEvent(), GetInstigatorController(), this);
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation());
 			Destroy();
@@ -24,4 +24,27 @@ void AEnemyProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 		}
 	}	
 	
+}
+
+// This must always be called before shooting after moving or rotating!
+void AEnemyProjectile::UpdateOffsets()
+{
+	// Set shooting offset locations
+	FVector FireDirection = GetActorForwardVector();
+	const FRotator FireRotation = FireDirection.Rotation();
+	FVector Location = GetActorLocation();
+
+	const UWorld* World = GetWorld();
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
+
+	Front = Location + FireRotation.RotateVector(FVector(90.f, 0.f, 0.f));
+	Left = Location + FireRotation.RotateVector(FVector(0.f, -90.f, 0.f));
+	Back = Location + FireRotation.RotateVector(FVector(-90.f, 0.f, 0.f));
+	Right = Location + FireRotation.RotateVector(FVector(0.f, 90.f, 0.f));
+	Center = Location;
+	if(PlayerCharacter)
+		Player = PlayerCharacter->GetActorLocation();
+	else
+		Player = FVector(0.f, 0.f, 0.f);
+
 }

@@ -73,6 +73,9 @@ void ABossCharacter::UpdateOffsets()
 	Back = Location + FireRotation.RotateVector(FVector(-90.f, 0.f, 0.f));
 	Right = Location + FireRotation.RotateVector(FVector(0.f, 90.f, 0.f));
 	Center = Location;
-	Player = PlayerCharacter->GetActorLocation();
+	if (PlayerCharacter)
+		Player = PlayerCharacter->GetActorLocation();
+	else
+		Player = FVector(0.f, 0.f, 0.f);
 
 }

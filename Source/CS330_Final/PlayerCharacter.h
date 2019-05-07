@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CardEFfect.h"
-#include "Deck.h"
 #include "DeckHandler.h"
 #include "PlayerCharacter.generated.h"
 
@@ -46,7 +45,9 @@ public:
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 		class USoundBase* FireSound;
 
-	
+	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
+		class USoundBase* HitSound;
+
 
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
@@ -91,6 +92,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 	TSubclassOf<class ACS330_FinalProjectile> AirBullet;
 
+	// This fires when the player takes damage
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
+	TSubclassOf<class ACardEffect> HitEffect;
+
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;
@@ -103,6 +108,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnStopFire();
 	FTimerHandle FireTimer;
+	FTimerHandle HitInvulnTimer;
+	void RemoveHitInvuln();
 
 	/** Navigate player using WASD */
 	void MoveForward(float Value);
