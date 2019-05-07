@@ -20,7 +20,9 @@ public:
 	void UseCard(int index);
 	int DeckCounter;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _deck;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _hand;
 	TArray<TSubclassOf<class ACardEffect>> _discard;
 	TArray<TSubclassOf<class ACardEffect>> _notInPlay;
