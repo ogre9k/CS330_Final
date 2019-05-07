@@ -17,7 +17,7 @@ class CS330_FINAL_API ADeckHandler : public AInfo
 public:
 	ADeckHandler();
 	UFUNCTION(BlueprintCallable)
-	void UseCard(int index);
+		void UseCard(int index);
 	int DeckCounter;
 
 	TArray<TSubclassOf<class ACardEffect>> _deck;
