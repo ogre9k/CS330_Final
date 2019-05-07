@@ -2,6 +2,7 @@
 
 #include "PlayerProjectile.h"
 #include "EnemyCharacter.h"
+#include "BossCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 void APlayerProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -9,7 +10,9 @@ void APlayerProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp
 
 	if (OtherActor != NULL && OtherActor != this && OtherActor != UGameplayStatics::GetPlayerPawn(GetWorld(), 0) && !Cast<ACS330_FinalProjectile>(OtherActor))
 	{
-		if (Cast<AEnemyCharacter>(OtherActor))
+		if (Cast<ABossCharacter>(OtherActor))
+			OtherActor->TakeDamage(Damage, FDamageEvent(), GetInstigatorController(), this);
+		else if (Cast<AEnemyCharacter>(OtherActor))
 			OtherActor->TakeDamage(Damage, FDamageEvent(), GetInstigatorController(), this);
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation());
