@@ -41,19 +41,13 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		float MoveSpeed;
 
-	/* Holds the initial amount of mana the player starts with */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-		int MaxMana;
-	/* Mana expended to utilize cards */
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-		int Mana;
-
 	/* Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 		class USoundBase* FireSound;
 
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 		class USoundBase* HitSound;
+
 
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
@@ -65,7 +59,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 		float HP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-		float MP;
+		int MaxMP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		int MP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 		TSubclassOf<class ACardEffect> CardToUse;
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)

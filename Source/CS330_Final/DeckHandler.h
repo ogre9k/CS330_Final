@@ -23,12 +23,16 @@ public:
 	TArray<TSubclassOf<class ACardEffect>> _deck;
 	TArray<TSubclassOf<class ACardEffect>> _hand;
 	TArray<TSubclassOf<class ACardEffect>> _discard;
+	TArray<TSubclassOf<class ACardEffect>> _notInPlay;
 	TArray<bool> _usedCards;
 
 	void Shuffle();
 	void Draw();
+	void ShuffleNotInPlay();
 	UFUNCTION(BlueprintCallable)
 	void DiscardHand();
+	UFUNCTION(BlueprintCallable)
+	void AddToDeck();
 
 	// Card Effects
 	//Cantrips

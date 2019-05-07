@@ -48,7 +48,8 @@ APlayerCharacter::APlayerCharacter()
 	}
 
 	HP = 20;
-	MP = 3;
+	MaxMP = 3;
+	MP = MaxMP;
 	Color = "Red";
 	ComboAnimFlag = false;
 	Shooting = false;
@@ -81,9 +82,6 @@ APlayerCharacter::APlayerCharacter()
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireRate = 0.16f;
-	// Mana
-	MaxMana = 3; // NOTE: This can be modified. Make sure to reduce to 3 before release!
-	Mana = MaxMana;
 
 	APlayerController* PC = Cast<APlayerController>(GetController());
 

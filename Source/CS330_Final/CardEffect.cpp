@@ -13,6 +13,7 @@ ACardEffect::ACardEffect()
 	ManaCost = 1.0f;
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	CardImage = NULL;
 	
 	/*
 	this->OnActorBeginOverlap.AddDynamic(this, &ACardEffect::ActorOverlap);
@@ -60,4 +61,11 @@ void ACardEffect::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation());
 	}
 
+}
+
+
+
+UImage *ACardEffect::GetImage()
+{
+	return CardImage;
 }

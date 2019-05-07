@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
+#include "Runtime/UMG/Public/Components/Image.h"
 #include "CardEffect.generated.h"
 
 UCLASS()
@@ -20,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 		float Damage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		UImage* CardImage;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Stats")
 		FString Color;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, category = "Stats")
@@ -34,6 +38,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float ManaCost;
+
+	UFUNCTION(BlueprintCallable)
+	UImage *GetImage();
+
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
