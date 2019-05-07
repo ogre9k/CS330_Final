@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ProjectileEnemyController.h"
-#include "WizardCharacter.h"
+#include "EnemyCharacter.h"
 #include "CS330_FinalGameMode.h"
 
 AProjectileEnemyController::AProjectileEnemyController()
@@ -30,18 +30,18 @@ void AProjectileEnemyController::SetState(EWizardAIState NewState)
 {
 	CurrentState = NewState;
 
-	AWizardCharacter* WizardCharacter = Cast<AWizardCharacter>(WizardPawn);
+	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(WizardPawn);
 
 	switch (NewState)
 	{
 	case EChase:
-		if (WizardCharacter) {
+		if (EnemyCharacter) {
 
 		}
 		break;
 	case EStop:
-		if (WizardCharacter) {
-			// MoveTo(WizardCharacter->GetActorLocation());
+		if (EnemyCharacter) {
+			// MoveTo(EnemyCharacter->GetActorLocation());
 
 		}
 		break;
@@ -55,7 +55,7 @@ void AProjectileEnemyController::SetState(EWizardAIState NewState)
 void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 {
 	APawn * Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	AWizardCharacter* WizardCharacter = Cast<AWizardCharacter>(WizardPawn);
+	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(WizardPawn);
 	if (Player && WizardPawn) {
 		FVector EnemyToPlayer = Player->GetActorLocation() - WizardPawn->GetActorLocation();
 		float dist = EnemyToPlayer.Size();
@@ -74,9 +74,9 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 			float dist = EnemyToPlayer.Size();
 			if (dist <= minRange)
 				SetState(EWizardAIState::EStop);
-			if (WizardCharacter) {
+			if (EnemyCharacter) {
 				EnemyToPlayer.Normalize();
-				WizardCharacter->AddMovementInput(EnemyToPlayer, WizardCharacter->MoveSpeed, false);
+				EnemyCharacter->AddMovementInput(EnemyToPlayer, EnemyCharacter->MoveSpeed, false);
 			}
 			
 		}
@@ -88,9 +88,9 @@ void AProjectileEnemyController::HandleCurrentState(EWizardAIState NewState)
 			if (dist > maxRange)
 				SetState(EWizardAIState::EChase);
 			else if (dist < minRange) {
-				if (WizardCharacter) {
+				if (EnemyCharacter) {
 					EnemyToPlayer.Normalize();
-					WizardCharacter->AddMovementInput(-EnemyToPlayer, WizardCharacter->MoveSpeed, false);
+					EnemyCharacter->AddMovementInput(-EnemyToPlayer, EnemyCharacter->MoveSpeed, false);
 				}
 			}
 		}

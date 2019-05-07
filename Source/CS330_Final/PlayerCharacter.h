@@ -46,6 +46,9 @@ public:
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 		class USoundBase* FireSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+        int MaxMP;
+
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;

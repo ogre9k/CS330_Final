@@ -36,6 +36,7 @@ ADeckHandler::ADeckHandler()
 	_usedCards.Add(false);
 
 	_deck.Add(Fireball.Class);
+	_deck.Add(Inferno.Class);
 	_deck.Add(Burst.Class);
 	_deck.Add(Boomerang.Class);
 	_deck.Add(Blitz.Class);
@@ -44,8 +45,9 @@ ADeckHandler::ADeckHandler()
 	_deck.Add(Fireball.Class);
 	_deck.Add(Boomerang.Class);
 
+
 	_hand.Add(_deck[0]);
-	_hand.Add(_deck[3]);
+	_hand.Add(_deck[1]);
 	_hand.Add(_deck[4]);
 
 	DeckCounter = _deck.Num() - 1;

@@ -42,7 +42,8 @@ APlayerCharacter::APlayerCharacter()
 	}
 
 	HP = 20;
-	MP = 3;
+	MaxMP = 3;
+	MP = MaxMP;
 	Color = "Red";
 	ComboAnimFlag = false;
 	Shooting = false;
@@ -252,7 +253,11 @@ float APlayerCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 
 	if (ActualDamage > 0.0f)
 	{
-
+		HP -= Damage;
+		if (HP <= 0) 
+		{
+			Destroy();
+		}
 
 		;
 	}

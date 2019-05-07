@@ -36,9 +36,12 @@ public:
 		UAnimMontage* DeathAnim;
 
 	FTimerHandle DeathTimer;
+	UFUNCTION(BlueprintCallable)
 	void UpdateFacing();
 	void Kill();
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		float MoveSpeed;
 };
