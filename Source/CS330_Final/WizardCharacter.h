@@ -31,6 +31,8 @@ public:
 	void UpdateFacing();
 	void Kill();
 
+	void SetAggro();
+
 
 	void FireShot();
 
@@ -47,4 +49,7 @@ public:
 	/* The speed our ship moves around the level */
 
 	FTimerHandle FireTimer;
+
+private:
+	bool Aggro = false;
 };
