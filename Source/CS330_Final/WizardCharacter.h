@@ -19,7 +19,7 @@ public:
 	AWizardCharacter();
 
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Stats")
 		TSubclassOf<class ACS330_FinalProjectile> Bullet;
 
 	virtual void Tick(float DeltaSeconds) override;
