@@ -267,7 +267,7 @@ float APlayerCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 		HP -= Damage;
 		if (HP <= 0) 
 		{
-			Destroy();
+			HandleDeath();
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Invuln Set"));
 		// try and play the sound if specified
