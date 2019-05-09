@@ -29,6 +29,7 @@ void AProjectileEnemyController::OnMoveCompleted(FAIRequestID RequestID, const F
 {
 }
 
+
 void AProjectileEnemyController::SetState(EAIState NewState)
 {
 	CurrentState = NewState;

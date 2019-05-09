@@ -31,6 +31,7 @@ public:
 	void Possess(APawn * InPawn) override;
 	void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult & Result) override;
 
+
 	
 
 protected:
