@@ -21,6 +21,7 @@ public:
 	int DeckCounter;
 
 	TArray<TSubclassOf<class ACardEffect>> _deck;
+	UPROPERTY(BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _hand;
 	TArray<TSubclassOf<class ACardEffect>> _discard;
 	TArray<TSubclassOf<class ACardEffect>> _notInPlay;
