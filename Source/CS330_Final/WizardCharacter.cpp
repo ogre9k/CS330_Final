@@ -24,13 +24,14 @@ AWizardCharacter::AWizardCharacter()
 }
 void AWizardCharacter::Tick(float DeltaSeconds)
 {
-	UpdateFacing();
+	if (Aggro)
+		UpdateFacing();
+	
 }
 
 void AWizardCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorldTimerManager().SetTimer(FireTimer, this, &AWizardCharacter::FireShot, FMath::RandRange(FireMin, FireMax), true, 0.0f);
 }
 
 void AWizardCharacter::FireShot()
@@ -111,4 +112,10 @@ void AWizardCharacter::UpdateFacing()
 			}
 		}
 	}
+}
+
+void AWizardCharacter::SetAggro() 
+{
+	Aggro = true;
+	GetWorldTimerManager().SetTimer(FireTimer, this, &AWizardCharacter::FireShot, FMath::RandRange(FireMin, FireMax), true, 0.0f);
 }

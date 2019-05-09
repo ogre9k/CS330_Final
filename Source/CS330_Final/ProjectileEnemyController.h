@@ -11,6 +11,7 @@ enum EAIState {
 	EStart,
 	EChase,
 	EStop,
+	ENoAggro,
 	EDead
 };
 
@@ -44,6 +45,8 @@ protected:
 		float minRange;
 	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
 		float maxRange;
+	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
+		float aggroRange;
 	UPROPERTY(Category = AIBehavior, EditAnywhere, BlueprintReadWrite)
 		float noiseSeed;
 

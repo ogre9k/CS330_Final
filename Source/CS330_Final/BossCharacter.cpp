@@ -25,13 +25,11 @@ void ABossCharacter::Tick(float DeltaTime)
 float ABossCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent,
 	AController* EventInstigator, AActor* DamageCauser)
 {
-	float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	//float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-	if (ActualDamage > 0.0f)
+	if (bCanBeDamaged)
 	{
-
-
-		HP -= ActualDamage;
+		HP -= Damage;
 		if (HP <= 0.0f)
 		{
 			HP = StartingHP;
@@ -39,7 +37,7 @@ float ABossCharacter::TakeDamage(float Damage, struct FDamageEvent const& Damage
 		}
 	}
 
-	return ActualDamage;
+	return Damage;
 }
 
 void ABossCharacter::StartFire()
@@ -73,6 +71,9 @@ void ABossCharacter::UpdateOffsets()
 	Back = Location + FireRotation.RotateVector(FVector(-90.f, 0.f, 0.f));
 	Right = Location + FireRotation.RotateVector(FVector(0.f, 90.f, 0.f));
 	Center = Location;
-	Player = PlayerCharacter->GetActorLocation();
+	if (PlayerCharacter)
+		Player = PlayerCharacter->GetActorLocation();
+	else
+		Player = FVector(0.f, 0.f, 0.f);
 
 }

@@ -17,12 +17,10 @@ class CS330_FINAL_API ADeckHandler : public AInfo
 public:
 	ADeckHandler();
 	UFUNCTION(BlueprintCallable)
-	void UseCard(int index);
+		void UseCard(int index);
 	int DeckCounter;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _deck;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _hand;
 	TArray<TSubclassOf<class ACardEffect>> _discard;
 	TArray<TSubclassOf<class ACardEffect>> _notInPlay;

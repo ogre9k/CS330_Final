@@ -2,12 +2,14 @@
 
 #include "ProjectileEnemyController.h"
 #include "EnemyCharacter.h"
+#include "WizardCharacter.h"
 #include "CS330_FinalGameMode.h"
 
 AProjectileEnemyController::AProjectileEnemyController()
 {
 	minRange = 600.0f;
 	maxRange = 800.0f;
+	aggroRange = 800.0f;
 	noiseSeed = FMath::RandRange(0.0f, 1.0f);
 }
 
@@ -31,19 +33,18 @@ void AProjectileEnemyController::SetState(EAIState NewState)
 {
 	CurrentState = NewState;
 
+	/*
 	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(EnemyPawn);
 
 	switch (NewState)
 	{
 	case EChase:
 		if (EnemyCharacter) {
-
 		}
 		break;
 	case EStop:
 		if (EnemyCharacter) {
 			// MoveTo(EnemyCharacter->GetActorLocation());
-
 		}
 		break;
 	case EDead:
@@ -51,12 +52,16 @@ void AProjectileEnemyController::SetState(EAIState NewState)
 	default:
 		break;
 	}
+	
+	*/
+	
 }
 
-void AProjectileEnemyController::HandleCurrentState(EAIState NewState)
+void AProjectileEnemyController::HandleCurrentState(EAIState CurrentState)
 {
 	APawn * Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(EnemyPawn);
+	/*
 	if (Player && EnemyPawn) {
 		FVector EnemyToPlayer = Player->GetActorLocation() - EnemyPawn->GetActorLocation();
 		float dist = EnemyToPlayer.Size();
@@ -64,10 +69,23 @@ void AProjectileEnemyController::HandleCurrentState(EAIState NewState)
 			GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, FString::Printf(TEXT("Distance: %f"), dist));
 		}
 	}
-	switch (NewState)
+	*/
+	switch (CurrentState)
 	{
 	case EStart:
-		SetState(EAIState::EChase);
+		SetState(EAIState::ENoAggro);
+		break;
+	case ENoAggro:
+		if (Player && EnemyPawn) {
+			FVector EnemyToPlayer = Player->GetActorLocation() - EnemyPawn->GetActorLocation();
+			float dist = EnemyToPlayer.Size();
+			if (dist < aggroRange) {
+				SetState(EAIState::EChase);
+				AWizardCharacter * EnemyWizard = Cast<AWizardCharacter>(EnemyPawn);
+				if (EnemyWizard)
+					EnemyWizard->SetAggro();
+			}			
+		}
 		break;
 	case EChase:
 		if (Player && EnemyPawn) {
@@ -79,7 +97,6 @@ void AProjectileEnemyController::HandleCurrentState(EAIState NewState)
 				EnemyToPlayer.Normalize();
 				EnemyCharacter->AddMovementInput(EnemyToPlayer, EnemyCharacter->MoveSpeed, false);
 			}
-			
 		}
 		break;
 	case EStop:
