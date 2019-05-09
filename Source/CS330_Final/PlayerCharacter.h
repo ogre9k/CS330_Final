@@ -48,6 +48,9 @@ public:
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 		class USoundBase* HitSound;
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void HandleDeath();
+
 
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
