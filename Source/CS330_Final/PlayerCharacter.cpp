@@ -253,6 +253,7 @@ float APlayerCharacter::TakeDamage(float Damage, struct FDamageEvent const& Dama
 
 	if (ActualDamage > 0.0f)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Taking Damage"));
 		HP -= Damage;
 		if (HP <= 0) 
 		{
