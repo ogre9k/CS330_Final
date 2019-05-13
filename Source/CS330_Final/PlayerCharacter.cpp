@@ -43,6 +43,7 @@ APlayerCharacter::APlayerCharacter()
 
 	HP = 20;
 	MaxMP = 3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	MP = MaxMP;
 	Color = "Red";
 	ComboAnimFlag = false;

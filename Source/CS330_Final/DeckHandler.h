@@ -17,7 +17,7 @@ class CS330_FINAL_API ADeckHandler : public AInfo
 public:
 	ADeckHandler();
 	UFUNCTION(BlueprintCallable)
-	void UseCard(float index);
+	void UseCard(int index);
 	float DeckCounter;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

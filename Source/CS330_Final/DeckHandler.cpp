@@ -63,7 +63,7 @@ void ADeckHandler::Draw()
 	;
 }
 
-void ADeckHandler::UseCard(float index)
+void ADeckHandler::UseCard(int index)
 {
 	//Access default variables like this
 	//DO NOT CHANGE THEM - They will change for all instances of this object for the current game
