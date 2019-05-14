@@ -47,6 +47,7 @@ void AWizardCharacter::FireShot()
 
 			const FRotator FireRotation = FireDirection.Rotation();
 
+			FireHandler();
 			// Spawn projectile at an offset from this pawn
 			FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
 			FActorSpawnParameters SpawnParams;
