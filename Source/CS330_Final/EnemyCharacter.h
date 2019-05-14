@@ -34,6 +34,8 @@ public:
 		UParticleSystem* DeathEffect;
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 		UAnimMontage* DeathAnim;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoomID")
+		int RoomID;
 
 	FTimerHandle DeathTimer;
 	UFUNCTION(BlueprintCallable)
