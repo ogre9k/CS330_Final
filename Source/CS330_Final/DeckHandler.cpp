@@ -242,7 +242,7 @@ void ADeckHandler::ClearDecks()
 	}
 	for (int i = 0; i < _notInPlay.Num(); i++)
 	{
-		_deck.RemoveAt(0, 1, true);
+		_notInPlay.RemoveAt(0, 1, true);
 	}
 }
 
