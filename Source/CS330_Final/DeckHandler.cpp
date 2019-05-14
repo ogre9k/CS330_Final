@@ -248,137 +248,18 @@ void ADeckHandler::ClearDecks()
 
 void ADeckHandler::GetFromCatalog(int DeckIndex, int CatalogIndex)
 {
-	// Holy switch statements. I'm going to hope this doesn't cause massive overhead.
-	// Add to Hand.
-	if (DeckIndex == 0) 
+	if(DeckIndex == 0)
 	{
-		switch (CatalogIndex)
-		{
-		case 0:
-			_hand.Add(_catalog[0]);
-			break;
-		case 1:
-			_hand.Add(_catalog[1]);
-			break;
-		case 2:
-			_hand.Add(_catalog[2]);
-			break;
-		case 3:
-			_hand.Add(_catalog[3]);
-			break;
-		case 4:
-			_hand.Add(_catalog[4]);
-			break;
-		case 5:
-			_hand.Add(_catalog[5]);
-			break;
-		case 6:
-			_hand.Add(_catalog[6]);
-			break;
-		case 7:
-			_hand.Add(_catalog[7]);
-			break;
-		case 8:
-			_hand.Add(_catalog[8]);
-			break;
-		case 9:
-			_hand.Add(_catalog[9]);
-			break;
-		case 10:
-			_hand.Add(_catalog[10]);
-			break;
-		case 11:
-			_hand.Add(_catalog[11]);
-			break;
-		default:
-		}
+		_hand.Add(_catalog[CatalogIndex]);
 	}
 	// Add to Deck.
 	else if (DeckIndex == 1)
 	{
-		switch (CatalogIndex)
-		{
-		case 0:
-			_deck.Add(_catalog[0]);
-			break;
-		case 1:
-			_deck.Add(_catalog[1]);
-			break;
-		case 2:
-			_deck.Add(_catalog[2]);
-			break;
-		case 3:
-			_deck.Add(_catalog[3]);
-			break;
-		case 4:
-			_deck.Add(_catalog[4]);
-			break;
-		case 5:
-			_deck.Add(_catalog[5]);
-			break;
-		case 6:
-			_deck.Add(_catalog[6]);
-			break;
-		case 7:
-			_deck.Add(_catalog[7]);
-			break;
-		case 8:
-			_deck.Add(_catalog[8]);
-			break;
-		case 9:
-			_deck.Add(_catalog[9]);
-			break;
-		case 10:
-			_deck.Add(_catalog[10]);
-			break;
-		case 11:
-			_deck.Add(_catalog[11]);
-			break;
-		default:
-		}
+		_deck.Add(_catalog[CatalogIndex]);
 	}
 	// Add to NotInPlay.
 	else
 	{
-		switch (CatalogIndex)
-		{
-		case 0:
-			_notInPlay.Add(_catalog[0]);
-			break;
-		case 1:
-			_notInPlay.Add(_catalog[1]);
-			break;
-		case 2:
-			_notInPlay.Add(_catalog[2]);
-			break;
-		case 3:
-			_notInPlay.Add(_catalog[3]);
-			break;
-		case 4:
-			_notInPlay.Add(_catalog[4]);
-			break;
-		case 5:
-			_notInPlay.Add(_catalog[5]);
-			break;
-		case 6:
-			_notInPlay.Add(_catalog[6]);
-			break;
-		case 7:
-			_notInPlay.Add(_catalog[7]);
-			break;
-		case 8:
-			_notInPlay.Add(_catalog[8]);
-			break;
-		case 9:
-			_notInPlay.Add(_catalog[9]);
-			break;
-		case 10:
-			_notInPlay.Add(_catalog[10]);
-			break;
-		case 11:
-			_notInPlay.Add(_catalog[11]);
-			break;
-		default:
-		}
+		_notInPlay.Add(_catalog[CatalogIndex]);
 	}
 }
