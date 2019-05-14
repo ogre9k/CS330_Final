@@ -55,6 +55,20 @@ ADeckHandler::ADeckHandler()
 	_notInPlay.Add(Freeze.Class);
 	_notInPlay.Add(Tornado.Class);
 
+	// Add all Card Effects to the Catalog Deck.
+	_catalog.Add(Ember.Class);
+	_catalog.Add(Droplet.Class);
+	_catalog.Add(Breeze.Class);
+	_catalog.Add(Fireball.Class);
+	_catalog.Add(Burst.Class);
+	_catalog.Add(Boomerang.Class);
+	_catalog.Add(Overheat.Class);
+	_catalog.Add(Deluge.Class);
+	_catalog.Add(Blitz.Class);
+	_catalog.Add(Inferno.Class);
+	_catalog.Add(Freeze.Class);
+	_catalog.Add(Tornado.Class);
+
 	// Generate a dynamic seed based on time.
 	// (Required because apparently a packaged game will not generate a random stream naturally like in the editor).
 	FRandomStream SRand = FRandomStream();
@@ -212,5 +226,159 @@ void ADeckHandler::AddToDeck()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("All cards have been added to the deck!"));
+	}
+}
+
+// The next 2/4 functions are to be strictly used in tandem with the GlobalDeck.
+void ADeckHandler::ClearDecks()
+{
+	for (int i = 0; i < _deck.Num(); i++)
+	{
+		_deck.RemoveAt(0, 1, true);
+	}
+	for (int i = 0; i < _hand.Num(); i++)
+	{
+		_hand.RemoveAt(0, 1, true);
+	}
+	for (int i = 0; i < _notInPlay.Num(); i++)
+	{
+		_deck.RemoveAt(0, 1, true);
+	}
+}
+
+void ADeckHandler::GetFromCatalog(int DeckIndex, int CatalogIndex)
+{
+	// Holy switch statements. I'm going to hope this doesn't cause massive overhead.
+	// Add to Hand.
+	if (DeckIndex == 0) 
+	{
+		switch (CatalogIndex)
+		{
+		case 0:
+			_hand.Add(_catalog[0]);
+			break;
+		case 1:
+			_hand.Add(_catalog[1]);
+			break;
+		case 2:
+			_hand.Add(_catalog[2]);
+			break;
+		case 3:
+			_hand.Add(_catalog[3]);
+			break;
+		case 4:
+			_hand.Add(_catalog[4]);
+			break;
+		case 5:
+			_hand.Add(_catalog[5]);
+			break;
+		case 6:
+			_hand.Add(_catalog[6]);
+			break;
+		case 7:
+			_hand.Add(_catalog[7]);
+			break;
+		case 8:
+			_hand.Add(_catalog[8]);
+			break;
+		case 9:
+			_hand.Add(_catalog[9]);
+			break;
+		case 10:
+			_hand.Add(_catalog[10]);
+			break;
+		case 11:
+			_hand.Add(_catalog[11]);
+			break;
+		default:
+		}
+	}
+	// Add to Deck.
+	else if (DeckIndex == 1)
+	{
+		switch (CatalogIndex)
+		{
+		case 0:
+			_deck.Add(_catalog[0]);
+			break;
+		case 1:
+			_deck.Add(_catalog[1]);
+			break;
+		case 2:
+			_deck.Add(_catalog[2]);
+			break;
+		case 3:
+			_deck.Add(_catalog[3]);
+			break;
+		case 4:
+			_deck.Add(_catalog[4]);
+			break;
+		case 5:
+			_deck.Add(_catalog[5]);
+			break;
+		case 6:
+			_deck.Add(_catalog[6]);
+			break;
+		case 7:
+			_deck.Add(_catalog[7]);
+			break;
+		case 8:
+			_deck.Add(_catalog[8]);
+			break;
+		case 9:
+			_deck.Add(_catalog[9]);
+			break;
+		case 10:
+			_deck.Add(_catalog[10]);
+			break;
+		case 11:
+			_deck.Add(_catalog[11]);
+			break;
+		default:
+		}
+	}
+	// Add to NotInPlay.
+	else
+	{
+		switch (CatalogIndex)
+		{
+		case 0:
+			_notInPlay.Add(_catalog[0]);
+			break;
+		case 1:
+			_notInPlay.Add(_catalog[1]);
+			break;
+		case 2:
+			_notInPlay.Add(_catalog[2]);
+			break;
+		case 3:
+			_notInPlay.Add(_catalog[3]);
+			break;
+		case 4:
+			_notInPlay.Add(_catalog[4]);
+			break;
+		case 5:
+			_notInPlay.Add(_catalog[5]);
+			break;
+		case 6:
+			_notInPlay.Add(_catalog[6]);
+			break;
+		case 7:
+			_notInPlay.Add(_catalog[7]);
+			break;
+		case 8:
+			_notInPlay.Add(_catalog[8]);
+			break;
+		case 9:
+			_notInPlay.Add(_catalog[9]);
+			break;
+		case 10:
+			_notInPlay.Add(_catalog[10]);
+			break;
+		case 11:
+			_notInPlay.Add(_catalog[11]);
+			break;
+		default:
+		}
 	}
 }

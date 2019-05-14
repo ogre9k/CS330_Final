@@ -20,12 +20,19 @@ public:
 		void UseCard(int index);
 	int DeckCounter;
 
+	UPROPERTY(BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _deck;
 	UPROPERTY(BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _hand;
+	UPROPERTY(BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _discard;
+	UPROPERTY(BlueprintReadWrite)
 	TArray<TSubclassOf<class ACardEffect>> _notInPlay;
 	TArray<bool> _usedCards;
+
+	// This deck should ONLY be used in tandem with the Instance's GlobalDeckData.
+	UPROPERTY(BlueprintReadWrite)
+	TArray<TSubclassOf<class ACardEffect>> _catalog;
 
 	void Shuffle();
 	void Draw();
@@ -34,6 +41,12 @@ public:
 	void DiscardHand();
 	UFUNCTION(BlueprintCallable)
 	void AddToDeck();
+
+	// This functions are to be used ONLY in tandem with the Instance's GlobalDeckData.
+	UFUNCTION(BlueprintCallable)
+	void ClearDecks();
+	UFUNCTION(BlueprintCallable)
+	void GetFromCatalog(int DeckIndex, int CatalogIndex);
 
 	// Card Effects
 	//Cantrips
