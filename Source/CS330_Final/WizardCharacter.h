@@ -33,6 +33,8 @@ public:
 
 	void SetAggro();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void FireHandler(); // extra features to implement in blueprint when firing
 
 	void FireShot();
 
